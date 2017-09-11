@@ -1,0 +1,1 @@
+Headless magento connection
