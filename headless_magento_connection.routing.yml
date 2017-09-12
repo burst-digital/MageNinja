@@ -1,0 +1,6 @@
+headless_magento_connection.token:
+  path: 'hmc/token/{username}/{password}'
+  defaults:
+    _controller: '\Drupal\headless_magento_connection\Controller\ApiController::getToken'
+  requirements:
+    _permission: 'access content'
