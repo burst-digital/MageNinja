@@ -1,0 +1,7 @@
+name: Headless Magento Connection
+type: module
+description: Integrates Magento 2 products and customers via API
+core: 8.x
+package: Magento
+dependencies:
+  - drupal:rest
