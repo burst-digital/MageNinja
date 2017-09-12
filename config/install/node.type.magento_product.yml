@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'Magento product'
+type: magento_product
+description: 'Product as imported from Magento.'
+help: ''
+new_revision: true
+preview_mode: 2
+display_submitted: false
