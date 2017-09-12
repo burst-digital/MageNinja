@@ -10,11 +10,20 @@ class ApiController extends ControllerBase {
    * Magento API local test credentials
    */
   private static $base_uri = 'http://docker.for.mac.localhost/rest/default/';
-//  private static $magento_username = 'burst';
-//  private static $magento_password = '73xnY83383G6aC68';
+  //  private static $magento_username = 'burst';
+  //  private static $magento_password = '73xnY83383G6aC68';
 
   /**
-   * @return string
+   * Requests a token from the Magento API.
+   * This callback is mapped to the path
+   * 'hmc/token/{username}/{password}'.
+   *
+   * @param string $username
+   *  The username of the account that the token is requested as.
+   * @param string $password
+   *  The password of the account that the token is requested as.
+   *
+   * @return JsonResponse
    */
   public function getToken($username, $password) {
     $client = new \GuzzleHttp\Client([
@@ -36,6 +45,8 @@ class ApiController extends ControllerBase {
   }
 
   /**
+   * Returns the Magento API base uri.
+   *
    * @return string
    */
   public static function getBaseUri() {
