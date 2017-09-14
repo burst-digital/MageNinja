@@ -4,14 +4,13 @@ namespace Drupal\hmc\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
-use Drupal\user\EntityOwnerInterface;
 
 /**
  * Provides an interface for defining Magento product entities.
  *
  * @ingroup hmc
  */
-interface MagentoProductInterface extends  ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
+interface MagentoProductInterface extends  ContentEntityInterface, EntityChangedInterface {
 
   // Add get/set methods for your configuration properties here.
 
