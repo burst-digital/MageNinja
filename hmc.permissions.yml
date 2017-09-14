@@ -15,8 +15,5 @@ edit magento product entities:
 access magento product overview:
   title: 'Access the Magento product overview page'
 
-view published magento product entities:
-  title: 'View published Magento product entities'
-
-view unpublished magento product entities:
-  title: 'View unpublished Magento product entities'
+view magento product entities:
+  title: 'View Magento product entities'

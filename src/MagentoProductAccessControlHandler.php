@@ -21,10 +21,7 @@ class MagentoProductAccessControlHandler extends EntityAccessControlHandler {
     /** @var \Drupal\hmc\Entity\MagentoProductInterface $entity */
     switch ($operation) {
       case 'view':
-        if (!$entity->isPublished()) {
-          return AccessResult::allowedIfHasPermission($account, 'view unpublished magento product entities');
-        }
-        return AccessResult::allowedIfHasPermission($account, 'view published magento product entities');
+        return AccessResult::allowedIfHasPermission($account, 'view magento product entities');
 
       case 'update':
         return AccessResult::allowedIfHasPermission($account, 'edit magento product entities');
