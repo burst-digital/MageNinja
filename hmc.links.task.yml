@@ -1,0 +1,22 @@
+# Magento product routing definition
+magento_product.settings_tab:
+  route_name: magento_product.settings
+  title: 'Settings'
+  base_route: magento_product.settings
+
+entity.magento_product.canonical:
+  route_name: entity.magento_product.canonical
+  base_route: entity.magento_product.canonical
+  title: 'View'
+
+entity.magento_product.edit_form:
+  route_name: entity.magento_product.edit_form
+  base_route: entity.magento_product.canonical
+  title: 'Edit'
+
+entity.magento_product.delete_form:
+  route_name:  entity.magento_product.delete_form
+  base_route:  entity.magento_product.canonical
+  title: Delete
+  weight: 10
+

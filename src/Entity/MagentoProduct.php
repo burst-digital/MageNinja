@@ -34,14 +34,20 @@ use Drupal\user\UserInterface;
  *     },
  *   },
  *   base_table = "magento_product",
+ *   admin_permission = "administer magento product entities",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "name",
+ *     "uuid" = "uuid",
+ *     "uid" = "user_id",
  *     "langcode" = "langcode",
  *     "status" = "status",
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/magento_product/{magento_product}",
+ *     "add-form" = "/admin/structure/magento_product/add",
+ *     "edit-form" = "/admin/structure/magento_product/{magento_product}/edit",
+ *     "delete-form" = "/admin/structure/magento_product/{magento_product}/delete",
  *     "collection" = "/admin/structure/magento_product",
  *   },
  *   field_ui_base_route = "magento_product.settings"
@@ -50,6 +56,16 @@ use Drupal\user\UserInterface;
 class MagentoProduct extends ContentEntityBase implements MagentoProductInterface {
 
   use EntityChangedTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
+    parent::preCreate($storage_controller, $values);
+    $values += [
+      'user_id' => \Drupal::currentUser()->id(),
+    ];
+  }
 
   /**
    * {@inheritdoc}
@@ -132,11 +148,36 @@ class MagentoProduct extends ContentEntityBase implements MagentoProductInterfac
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
+    $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Authored by'))
+      ->setDescription(t('The user ID of author of the Magento product entity.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'user')
+      ->setSetting('handler', 'default')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'author',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 5,
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
-      ->setDescription(t('The name of the Magento product.'))
+      ->setDescription(t('The name of the Magento product entity.'))
       ->setSettings([
-        'max_length' => 100,
+        'max_length' => 50,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -158,11 +199,11 @@ class MagentoProduct extends ContentEntityBase implements MagentoProductInterfac
       ->setDefaultValue(TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Created at'))
+      ->setLabel(t('Created'))
       ->setDescription(t('The time that the entity was created.'));
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
-      ->setLabel(t('Updated at'))
+      ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'));
 
     return $fields;
