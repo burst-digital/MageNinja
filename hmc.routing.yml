@@ -1,0 +1,20 @@
+hmc.token:
+  path: 'hmc/token/{username}/{password}'
+  defaults:
+    _controller: '\Drupal\hmc\Controller\ApiController::getCustomerToken'
+  requirements:
+    _permission: 'access content'
+
+hmc.admintoken:
+  path: 'hmc/token/admin'
+  defaults:
+    _controller: '\Drupal\hmc\Controller\ApiController::getAdminToken'
+  requirements:
+    _permission: 'access content'
+
+hmc.product:
+  path: 'hmc/product/{id}'
+  defaults:
+    _controller: '\Drupal\hmc\Controller\ProductController::getById'
+  requirements:
+    _permission: 'access content'

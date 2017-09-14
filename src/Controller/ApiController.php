@@ -1,55 +1,42 @@
 <?php
 
-namespace Drupal\headless_magento_connection\Controller;
+namespace Drupal\hmc\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\hmc\Api\JsonExceptionResponse;
+use Drupal\hmc\Api\Authentication;
+use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiController extends ControllerBase {
-  /*
-   * Magento API local test credentials
-   */
-  private static $base_uri = 'http://docker.for.mac.localhost/rest/default/';
-  //  private static $magento_username = 'burst';
-  //  private static $magento_password = '73xnY83383G6aC68';
 
   /**
-   * Requests a token from the Magento API.
-   * This callback is mapped to the path
-   * 'hmc/token/{username}/{password}'.
+   * Requests a customer token from the Magento API.
    *
-   * @param string $username
-   *  The username of the account that the token is requested as.
-   * @param string $password
-   *  The password of the account that the token is requested as.
+   * @param $username
+   *  The customer's username.
+   * @param $password
+   *  The customer's password.
    *
    * @return JsonResponse
    */
-  public function getToken($username, $password) {
-    $client = new \GuzzleHttp\Client([
-      'base_uri' => self::getBaseUri()
-    ]);
+  public function getCustomerToken($username, $password) {
+    try {
+      $token = Authentication::getCustomerToken($username, $password);
 
-    $response = $client->post('V1/integration/admin/token', [
-      'Content-Type' => 'application/json',
-      'json' => [
-        'username' => $username,
-        'password' => $password
-      ]
-    ]);
-
-    // Token is returned with surrounding double quotes (i.e.: "thisisatoken").
-    $token = trim($response->getBody(), '"');
-
-    return new JsonResponse(['token' => $token]);
+      return new JsonResponse(['token' => $token]);
+    } catch (RequestException $e) {
+      return new JsonExceptionResponse($e);
+    }
   }
 
-  /**
-   * Returns the Magento API base uri.
-   *
-   * @return string
-   */
-  public static function getBaseUri() {
-    return self::$base_uri;
+  public function getAdminToken() {
+    try {
+      $token = Authentication::getAdminToken();
+
+      return new JsonResponse(['token' => $token]);
+    } catch (RequestException $e) {
+      return new JsonExceptionResponse($e);
+    }
   }
 }
