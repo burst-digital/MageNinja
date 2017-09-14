@@ -4,6 +4,8 @@ namespace Drupal\hmc\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\hmc\Api\Authentication;
+use Drupal\hmc\Api\JsonExceptionResponse;
+use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProductController extends ControllerBase {
@@ -16,15 +18,23 @@ class ProductController extends ControllerBase {
    * @return JsonResponse
    */
   public function getById($id) {
-    $client = Authentication::getClient();
-    $token = Authentication::getAdminToken();
-    $authentication = Authentication::getAuthentication($token);
+    try {
+      $client = Authentication::getClient();
+      $token = Authentication::getAdminToken();
+      $authHeader = Authentication::getHeader($token);
 
-    $endpoint = 'V1/products/id/';
+      $endpoint = 'V1/products/id/' . $id;
+      $options = [
+        'headers' => $authHeader + [
+        ]
+      ];
 
-    $response = $client->post($endpoint . $id, $authentication);
-    $product = $response->getBody();
+      $response = $client->get($endpoint, $options);
+      $product = json_decode($response->getBody());
 
-    return new JsonResponse($product);
+      return new JsonResponse(['product' => $product]);
+    } catch (RequestException $e) {
+      return new JsonExceptionResponse($e);
+    }
   }
 }

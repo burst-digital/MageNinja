@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 class Authentication {
 
   // TODO: Replace with base_uri from Drupal admin
-  private static $base_uri = 'http://docker.for.mac.localhost/rest/default/';
+  private static $base_uri = 'http://docker.for.mac.localhost/rest/';
 
   private static $client = NULL;
 
@@ -52,7 +52,6 @@ class Authentication {
 
       $endpoint = 'V1/integration/admin/token';
       $options = [
-        'Content-Type' => 'application/json',
         'json' => [
           'username' => $username,
           'password' => $password,
@@ -85,7 +84,6 @@ class Authentication {
 
     $endpoint = 'V1/integration/customer/token';
     $options = [
-      'Content-Type' => 'application/json',
       'json' => [
         'username' => $username,
         'password' => $password,
@@ -109,9 +107,9 @@ class Authentication {
    *
    * @return array
    */
-  public static function getAuthentication($token) {
-    $authentication = ['Authorization' => 'Bearer ' . $token];
+  public static function getHeader($token) {
+    $header = ['Authorization' => 'Bearer ' . $token];
 
-    return $authentication;
+    return $header;
   }
 }

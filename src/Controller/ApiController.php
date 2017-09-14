@@ -13,9 +13,9 @@ class ApiController extends ControllerBase {
   /**
    * Requests a customer token from the Magento API.
    *
-   * @param $username
+   * @param string $username
    *  The customer's username.
-   * @param $password
+   * @param string $password
    *  The customer's password.
    *
    * @return JsonResponse
