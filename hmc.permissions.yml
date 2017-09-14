@@ -1,0 +1,22 @@
+add magento product entities:
+  title: 'Create new Magento product entities'
+
+administer magento product entities:
+  title: 'Administer Magento product entities'
+  description: 'Allow to access the administration form to configure Magento product entities.'
+  restrict access: true
+
+delete magento product entities:
+  title: 'Delete Magento product entities'
+
+edit magento product entities:
+  title: 'Edit Magento product entities'
+
+access magento product overview:
+  title: 'Access the Magento product overview page'
+
+view published magento product entities:
+  title: 'View published Magento product entities'
+
+view unpublished magento product entities:
+  title: 'View unpublished Magento product entities'
