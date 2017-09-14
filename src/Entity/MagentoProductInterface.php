@@ -52,25 +52,4 @@ interface MagentoProductInterface extends  ContentEntityInterface, EntityChanged
    */
   public function setCreatedTime($timestamp);
 
-  /**
-   * Returns the Magento product published status indicator.
-   *
-   * Unpublished Magento product are only visible to restricted users.
-   *
-   * @return bool
-   *   TRUE if the Magento product is published.
-   */
-  public function isPublished();
-
-  /**
-   * Sets the published status of a Magento product.
-   *
-   * @param bool $published
-   *   TRUE to set this Magento product to published, FALSE to set it to unpublished.
-   *
-   * @return \Drupal\hmc\Entity\MagentoProductInterface
-   *   The called Magento product entity.
-   */
-  public function setPublished($published);
-
 }
