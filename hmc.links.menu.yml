@@ -1,14 +1,7 @@
-
 # Magento product menu items definition
 entity.magento_product.collection:
   title: 'Magento product list'
   route_name: entity.magento_product.collection
   description: 'List Magento product entities'
-  parent: system.admin_structure
+  parent: system.admin_content
   weight: 100
-
-magento_product.admin.structure.settings:
-  title: Magento product settings
-  description: 'Configure Magento product entities'
-  route_name: magento_product.settings
-  parent: system.admin_structure
