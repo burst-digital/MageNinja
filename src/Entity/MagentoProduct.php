@@ -2,7 +2,6 @@
 
 namespace Drupal\hmc\Entity;
 
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
@@ -19,8 +18,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   base_table = "magento_product",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "hmc_product_name",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "label" = "name"
  *   }
  * )
  */
