@@ -15,6 +15,26 @@ interface MagentoProductInterface extends  ContentEntityInterface, EntityChanged
   // Add get/set methods for your configuration properties here.
 
   /**
+   * Gets the Magento product reference ID.
+   *
+   * @return int
+   *   Reference ID of the Magento product.
+   */
+  public function getReferenceId();
+
+
+  /**
+   * Sets the Magento product reference ID.
+   *
+   * @param int $id
+   *   The Reference ID.
+   *
+   * @return \Drupal\hmc\Entity\MagentoProductInterface
+   *   The called Magento product entity.
+   */
+  public function setReferenceId($id);
+
+  /**
    * Gets the Magento product name.
    *
    * @return string

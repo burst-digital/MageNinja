@@ -30,15 +30,30 @@ class MagentoProduct extends ContentEntityBase implements MagentoProductInterfac
   /**
    * {@inheritdoc}
    */
+  public function getReferenceId() {
+    return $this->get('reference_id')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setReferenceId($id) {
+    $this->set('reference_id', $id);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getName() {
-    return $this->get('hmc_product_name')->value;
+    return $this->get('name')->value;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setName($name) {
-    $this->set('hmc_product_name', $name);
+    $this->set('name', $name);
     return $this;
   }
 
@@ -75,7 +90,7 @@ class MagentoProduct extends ContentEntityBase implements MagentoProductInterfac
       ->setDescription(t('The UUID of the Magento product entity.'))
       ->setReadOnly(TRUE);
 
-    $fields['hmc_product_name'] = BaseFieldDefinition::create('string')
+    $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Magento product entity.'))
       ->setSettings([
@@ -95,8 +110,8 @@ class MagentoProduct extends ContentEntityBase implements MagentoProductInterfac
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['hmc_product_id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Product ID'))
+    $fields['reference_id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Reference ID'))
       ->setDescription(t('The product ID as taken from Magento.'));
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
