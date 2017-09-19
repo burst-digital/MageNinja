@@ -14,67 +14,31 @@ use Drupal\Core\Entity\EntityTypeInterface;
  * @ingroup hmc
  *
  * @ContentEntityType(
- *   id = "magento_product",
+ *   id = "hmc_magento_product",
  *   label = @Translation("Magento product"),
- *   handlers = {
- *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\hmc\MagentoProductListBuilder",
- *     "views_data" = "Drupal\hmc\Entity\MagentoProductViewsData",
- *
- *     "form" = {
- *       "default" = "Drupal\hmc\Form\MagentoProductForm",
- *       "add" = "Drupal\hmc\Form\MagentoProductForm",
- *       "edit" = "Drupal\hmc\Form\MagentoProductForm",
- *       "delete" = "Drupal\hmc\Form\MagentoProductDeleteForm",
- *     },
- *     "access" = "Drupal\hmc\MagentoProductAccessControlHandler",
- *     "route_provider" = {
- *       "html" = "Drupal\hmc\MagentoProductHtmlRouteProvider",
- *     },
- *   },
  *   base_table = "magento_product",
- *   admin_permission = "administer magento product entities",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "name",
- *     "uuid" = "uuid",
- *   },
- *   links = {
- *     "canonical" = "/admin/structure/magento_product/{magento_product}",
- *     "add-form" = "/admin/structure/magento_product/add",
- *     "edit-form" = "/admin/structure/magento_product/{magento_product}/edit",
- *     "delete-form" = "/admin/structure/magento_product/{magento_product}/delete",
- *     "collection" = "/admin/structure/magento_product",
- *   },
- *   field_ui_base_route = "magento_product.settings"
+ *     "label" = "hmc_product_name",
+ *     "uuid" = "uuid"
+ *   }
  * )
  */
 class MagentoProduct extends ContentEntityBase implements MagentoProductInterface {
-
   use EntityChangedTrait;
 
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
-    parent::preCreate($storage_controller, $values);
-    $values += [
-      'user_id' => \Drupal::currentUser()->id(),
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getName() {
-    return $this->get('name')->value;
+    return $this->get('hmc_product_name')->value;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setName($name) {
-    $this->set('name', $name);
+    $this->set('hmc_product_name', $name);
     return $this;
   }
 
@@ -99,11 +63,23 @@ class MagentoProduct extends ContentEntityBase implements MagentoProductInterfac
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['name'] = BaseFieldDefinition::create('string')
+    // Standard field, used as unique if primary index.
+    $fields['id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('ID'))
+      ->setDescription(t('The ID of the Magento product entity.'))
+      ->setReadOnly(TRUE);
+
+    // Standard field, unique outside of the scope of the current project.
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The UUID of the Magento product entity.'))
+      ->setReadOnly(TRUE);
+
+    $fields['hmc_product_name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Magento product entity.'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 255,
         'text_processing' => 0,
       ])
       ->setDefaultValue('')
@@ -118,6 +94,10 @@ class MagentoProduct extends ContentEntityBase implements MagentoProductInterfac
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
+
+    $fields['hmc_product_id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Product ID'))
+      ->setDescription(t('The product ID as taken from Magento.'));
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))

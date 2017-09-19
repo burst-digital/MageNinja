@@ -1,5 +1,0 @@
-entity.magento_product.add_form:
-  route_name: entity.magento_product.add_form
-  title: 'Add Magento product'
-  appears_on:
-    - entity.magento_product.collection
