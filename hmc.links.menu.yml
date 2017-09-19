@@ -1,0 +1,6 @@
+hmc.admin:
+  title: 'Headless Magento Connection'
+  description: 'Configure the Headless Magento Connection module'
+  parent: system.admin_config_services
+  route_name: hmc.config
+  weight: 100

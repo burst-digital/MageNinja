@@ -18,3 +18,11 @@ hmc.product:
     _controller: '\Drupal\hmc\Controller\ProductController::getById'
   requirements:
     _permission: 'access content'
+
+hmc.config:
+  path: 'admin/config/services/hmc'
+  defaults:
+    _form: '\Drupal\hmc\Form\ConfigForm'
+    _title: 'Headless Magento Connection'
+  requirements:
+    _permission: 'administer site configuration'
