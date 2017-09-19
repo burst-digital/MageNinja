@@ -28,17 +28,24 @@ class ConfigForm extends ConfigFormBase {
     $form = parent::buildForm($form, $form_state);
     $config = $this->config('hmc.settings');
 
+    $form['base_uri'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Magento base URI'),
+      '#default_value' => $config->get('base_uri'),
+      '#required' => TRUE
+    ];
+
     $form['admin_username'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Admin username'),
-      '#default_value' => $config->get('hmc.admin_username'),
+      '#title' => $this->t('Magento admin username'),
+      '#default_value' => $config->get('admin_username'),
       '#required' => TRUE
     ];
 
     $form['admin_password'] = [
       '#type' => 'password',
-      '#title' => $this->t('Admin password'),
-      '#default_value' => $config->get('hmc.admin_password'),
+      '#title' => $this->t('Magento admin password'),
+      '#default_value' => $config->get('admin_password'),
       '#required' => TRUE
     ];
 
@@ -51,6 +58,7 @@ class ConfigForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('hmc.settings');
 
+    $config->set('base_uri', $form_state->getValue('base_uri'));
     $config->set('admin_username', $form_state->getValue('admin_username'));
     $config->set('admin_password', $form_state->getValue('admin_password'));
 

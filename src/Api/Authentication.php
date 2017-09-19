@@ -5,13 +5,7 @@ namespace Drupal\hmc\Api;
 use GuzzleHttp\Client;
 
 class Authentication {
-
-  // TODO: Replace with base_uri from Drupal admin
-  private static $base_uri = 'http://docker.for.mac.localhost/rest/';
-
   private static $client = NULL;
-
-  private static $token = NULL;
 
   /**
    * Singleton pattern for GuzzleHttp\Client
@@ -21,20 +15,11 @@ class Authentication {
   public static function getClient() {
     if (self::$client === NULL) {
       self::$client = new Client([
-        'base_uri' => self::getBaseUri(),
+        'base_uri' => \Drupal::config('hmc.settings')->get('base_uri'),
       ]);
     }
 
     return self::$client;
-  }
-
-  /**
-   * Returns the Magento API base uri.
-   *
-   * @return string
-   */
-  public static function getBaseUri() {
-    return self::$base_uri;
   }
 
   /**
@@ -43,7 +28,9 @@ class Authentication {
    * @return string
    */
   public static function getAdminToken() {
-    if (self::$token === NULL) {
+    $config = \Drupal::config('hmc.settings');
+
+    if ($config->get('admin_token') === null) {
       $client = self::getClient();
 
       $config = \Drupal::config('hmc.settings');
@@ -61,10 +48,12 @@ class Authentication {
       $response = $client->post($endpoint, $options);
 
       // Trim, because token is returned with surrounding double quotes (i.e.: "thisisatoken").
-      self::$token = trim($response->getBody(), '"');
+      $token = trim($response->getBody(), '"');
+
+      \Drupal::service('config.factory')->getEditable('hmc.settings')->set('admin_token', $token)->save();
     }
 
-    return self::$token;
+    return $config->get('admin_token');
   }
 
   /**
