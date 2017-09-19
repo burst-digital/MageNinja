@@ -46,9 +46,9 @@ class Authentication {
     if (self::$token === NULL) {
       $client = self::getClient();
 
-      // TODO: Replace with credentials from Drupal admin
-      $username = 'burst';
-      $password = '73xnY83383G6aC68';
+      $config = \Drupal::config('hmc.settings');
+      $username = $config->get('admin_username'); // TODO: Remove test value'burst';
+      $password = $config->get('admin_password'); // TODO: Remove test value '73xnY83383G6aC68';
 
       $endpoint = 'V1/integration/admin/token';
       $options = [

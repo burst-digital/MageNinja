@@ -51,8 +51,8 @@ class ConfigForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('hmc.settings');
 
-    $config->set('hmc.admin_username', $form_state->getValue('admin_username'));
-    $config->set('hmc.admin_password', $form_state->getValue('admin_password'));
+    $config->set('admin_username', $form_state->getValue('admin_username'));
+    $config->set('admin_password', $form_state->getValue('admin_password'));
 
     $config->save();
 
