@@ -34,7 +34,7 @@ class Authentication {
       $client = self::getClient();
 
       $config = \Drupal::config('hmc.settings');
-      $username = $config->get('admin_username'); // TODO: Remove test value'burst';
+      $username = $config->get('admin_username'); // TODO: Remove test value 'burst';
       $password = $config->get('admin_password'); // TODO: Remove test value '73xnY83383G6aC68';
 
       $endpoint = 'V1/integration/admin/token';
