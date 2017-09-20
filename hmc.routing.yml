@@ -19,6 +19,20 @@ hmc.product:
   requirements:
     _permission: 'access content'
 
+hmc.import:
+  path: 'hmc/import'
+  defaults:
+    _controller: '\Drupal\hmc\Controller\ProductController::import'
+  requirements:
+    _permission: 'access content'
+
+hmc.count:
+  path: 'hmc/catalog/count'
+  defaults:
+    _controller: '\Drupal\hmc\Controller\ProductController::count'
+  requirements:
+    _permission: 'access content'
+
 hmc.config:
   path: 'admin/config/services/hmc'
   defaults:

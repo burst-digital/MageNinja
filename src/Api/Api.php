@@ -4,7 +4,7 @@ namespace Drupal\hmc\Api;
 
 use GuzzleHttp\Client;
 
-class Authentication {
+class Api {
   private static $client = NULL;
 
   /**
@@ -96,7 +96,7 @@ class Authentication {
    *
    * @return array
    */
-  public static function getHeader($token) {
+  public static function getAuthHeader($token) {
     $header = ['Authorization' => 'Bearer ' . $token];
 
     return $header;
