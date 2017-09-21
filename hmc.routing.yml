@@ -26,10 +26,10 @@ hmc.import:
   requirements:
     _permission: 'access content'
 
-hmc.count:
-  path: 'hmc/catalog/count'
+hmc.product_page:
+  path: 'hmc/product/page/{currentPage}/{pageSize}'
   defaults:
-    _controller: '\Drupal\hmc\Controller\ProductController::count'
+    _controller: '\Drupal\hmc\Controller\ProductController::getByPage'
   requirements:
     _permission: 'access content'
 
