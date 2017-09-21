@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class JsonExceptionResponse extends JsonResponse {
 
   /**
-   * JsonException constructor.
+   * JsonExceptionResponse constructor.
    * Parses the Exception into a JSON Response.
    *
    * @param Exception $exception

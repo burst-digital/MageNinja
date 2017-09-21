@@ -4,7 +4,7 @@ namespace Drupal\hmc\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\hmc\Api\JsonExceptionResponse;
-use Drupal\hmc\Api\Authentication;
+use Drupal\hmc\Api\Api;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -22,7 +22,7 @@ class ApiController extends ControllerBase {
    */
   public function getCustomerToken($username, $password) {
     try {
-      $token = Authentication::getCustomerToken($username, $password);
+      $token = Api::getCustomerToken($username, $password);
 
       return new JsonResponse(['token' => $token]);
     } catch (RequestException $e) {
@@ -32,7 +32,7 @@ class ApiController extends ControllerBase {
 
   public function getAdminToken() {
     try {
-      $token = Authentication::getAdminToken();
+      $token = Api::getAdminToken();
 
       return new JsonResponse(['token' => $token]);
     } catch (RequestException $e) {
