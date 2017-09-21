@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\hmc\Api\Api;
 use Drupal\hmc\Api\JsonExceptionResponse;
 use Drupal\hmc\Api\SearchCriteriaBuilder;
+use Drupal\hmc\Entity\MagentoProduct;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -33,13 +34,21 @@ class ProductController extends ControllerBase {
       $response = $client->get($endpoint, $options);
       $product = json_decode($response->getBody());
 
-      return new JsonResponse(['product' => $product]);
+      return new JsonResponse($product);
     } catch (RequestException $e) {
       return new JsonExceptionResponse($e);
     }
   }
 
-  public function getAll() {
+  /**
+   * Get a subset of products from Magento.
+   *
+   * @param int $pageSize
+   * @param int $currentPage
+   *
+   * @return \Drupal\hmc\Api\JsonExceptionResponse|\Symfony\Component\HttpFoundation\JsonResponse
+   */
+  public function getByPage($currentPage, $pageSize) {
     try {
       $client = Api::getClient();
       $token = Api::getAdminToken();
@@ -47,8 +56,8 @@ class ProductController extends ControllerBase {
 
       $searchCriteria = new SearchCriteriaBuilder();
       $searchCriteria
-        ->add(['[pageSize]' => '10'])
-        ->add(['[currentPage]' => '1']);
+        ->add(['[pageSize]' => $pageSize])
+        ->add(['[currentPage]' => $currentPage]);
 
       $endpoint = 'V1/products?' . $searchCriteria;
       $options = [
@@ -58,7 +67,7 @@ class ProductController extends ControllerBase {
       $response = $client->get($endpoint, $options);
       $products = json_decode($response->getBody());
 
-      return new JsonResponse(['products' => $products]);
+      return new JsonResponse($products);
     } catch (RequestException $e) {
       return new JsonExceptionResponse($e);
     }
@@ -66,36 +75,64 @@ class ProductController extends ControllerBase {
 
   public function import() {
     try {
-      $count = json_decode($this->count()->getContent())->count;
+      /** @var array $productCount */
+      $productIds = json_decode($this->getAllIds()->getContent());
 
+      $processedProductsCount = 0;
+      $createdProductsCount = 0;
+      $deletedProductsCount = 0; // TODO: implement deleting products that exist in Drupal but not in Magento
+      foreach($productIds as $productId) {
+        $processedProductsCount++;
 
+        /** @var MagentoProduct $productEntity */
+        $productEntity = \Drupal::entityQuery('hmc_magento_product')
+          ->condition('reference_id', $productId)
+          ->execute();
 
-      return $this->getAll();
+        if(empty($productEntity)) {
+          MagentoProduct::create([
+            'reference_id' => $productId
+          ])->save();
 
-//      return new RedirectResponse('/');
+          $createdProductsCount++;
+        }
+      }
+
+      \Drupal::logger('hmc')->debug('Import: ' . $processedProductsCount . ' products processed.');
+      \Drupal::logger('hmc')->info('Import: ' . $createdProductsCount . ' products imported.');
+      \Drupal::logger('hmc')->notice('Import: ' . $deletedProductsCount . ' products deleted.');
+
+//      /** @var \Drupal\Core\Queue\QueueInterface $queue */
+//      $queue = \Drupal::queue('hmc_product_import', TRUE);
+//
+//      $queue->createItem($productIds);
+
+      return new RedirectResponse('/');
     } catch (RequestException $e) {
       return new JsonExceptionResponse($e);
     }
   }
 
   /**
+   * Get all product Ids from Magento
+   *
    * @return \Drupal\hmc\Api\JsonExceptionResponse|\Symfony\Component\HttpFoundation\JsonResponse
    */
-  public function count() {
+  public function getAllIds() {
     try {
       $client = Api::getClient();
       $token = Api::getAdminToken();
       $authHeader = Api::getAuthHeader($token);
 
-      $endpoint = 'V1/catalog/count';
+      $endpoint = 'V1/catalog/products';
       $options = [
         'headers' => $authHeader
       ];
 
       $response = $client->get($endpoint, $options);
-      $count = json_decode($response->getBody());
+      $productIds = json_decode($response->getBody());
 
-      return new JsonResponse(['count' => $count]);
+      return new JsonResponse($productIds);
     } catch (RequestException $e) {
       return new JsonExceptionResponse($e);
     }
