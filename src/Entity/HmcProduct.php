@@ -15,6 +15,9 @@ use Drupal\Core\Entity\EntityTypeInterface;
  * @ContentEntityType(
  *   id = "hmc_product",
  *   label = @Translation("hmc product"),
+ *   handlers = {
+ *     "access" = "Drupal\hmc\HmcEntityAccessControlHandler"
+ *   },
  *   base_table = "hmc_product",
  *   entity_keys = {
  *     "id" = "id",
