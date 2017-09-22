@@ -26,6 +26,13 @@ hmc.import:
   requirements:
     _permission: 'access content'
 
+hmc.import_product:
+  path: 'hmc/import/{id}'
+  defaults:
+    _controller: '\Drupal\hmc\Controller\ProductController::importById'
+  requirements:
+    _permission: 'access content'
+
 hmc.product_page:
   path: 'hmc/product/page/{currentPage}/{pageSize}'
   defaults:

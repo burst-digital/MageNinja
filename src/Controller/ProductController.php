@@ -114,6 +114,27 @@ class ProductController extends ControllerBase {
     }
   }
 
+  public function importById($id) {
+    try {
+      $productEntity = \Drupal::entityQuery('hmc_product')
+        ->condition('reference_id', $id)
+        ->execute();
+
+      if (empty($productEntity)) {
+        $productEntity = HmcProduct::create([
+          'reference_id' => $id
+        ]);
+        $productEntity->save();
+      }
+
+      \Drupal::logger('hmc')->info('Import: product with ID: \'' . $id . '\' imported.');
+
+      return new RedirectResponse('/');
+    } catch (RequestException $e) {
+      return new JsonExceptionResponse($e);
+    }
+  }
+
   /**
    * Get all product Ids from Magento
    *
