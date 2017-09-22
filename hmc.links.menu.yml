@@ -4,3 +4,10 @@ hmc.admin:
   parent: system.admin_config_services
   route_name: hmc.config
   weight: 100
+
+hmc.sync:
+  title: 'Synchronize magento products'
+  description: 'Synchronize magento products to drupal'
+  parent: system.admin_content
+  route_name: hmc.import
+  weight: 100

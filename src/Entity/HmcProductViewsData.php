@@ -5,9 +5,9 @@ namespace Drupal\hmc\Entity;
 use Drupal\views\EntityViewsData;
 
 /**
- * Provides Views data for Magento product entities.
+ * Provides Views data for hmc product entities.
  */
-class MagentoProductViewsData extends EntityViewsData {
+class HmcProductViewsData extends EntityViewsData {
 
   /**
    * {@inheritdoc}

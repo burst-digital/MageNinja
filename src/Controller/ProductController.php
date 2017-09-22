@@ -6,7 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\hmc\Api\Api;
 use Drupal\hmc\Api\JsonExceptionResponse;
 use Drupal\hmc\Api\SearchCriteriaBuilder;
-use Drupal\hmc\Entity\MagentoProduct;
+use Drupal\hmc\Entity\HmcProduct;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -84,13 +84,13 @@ class ProductController extends ControllerBase {
       foreach($productIds as $productId) {
         $processedProductsCount++;
 
-        /** @var MagentoProduct $productEntity */
-        $productEntity = \Drupal::entityQuery('hmc_magento_product')
+        /** @var HmcProduct $productEntity */
+        $productEntity = \Drupal::entityQuery('hmc_product')
           ->condition('reference_id', $productId)
           ->execute();
 
         if(empty($productEntity)) {
-          MagentoProduct::create([
+          HmcProduct::create([
             'reference_id' => $productId
           ])->save();
 
@@ -102,6 +102,7 @@ class ProductController extends ControllerBase {
       \Drupal::logger('hmc')->info('Import: ' . $createdProductsCount . ' products imported.');
       \Drupal::logger('hmc')->notice('Import: ' . $deletedProductsCount . ' products deleted.');
 
+//      TODO: Don't import in one big request, but in batches
 //      /** @var \Drupal\Core\Queue\QueueInterface $queue */
 //      $queue = \Drupal::queue('hmc_product_import', TRUE);
 //
