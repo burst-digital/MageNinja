@@ -5,7 +5,12 @@ namespace Drupal\mage_ninja\Api;
 use GuzzleHttp\Client;
 
 class Api {
-  private static $client = NULL;
+  /**
+   * Save the GuzzleHttp\Client created by the getClient() function
+   *
+   * @static \GuzzleHttp\Client|null
+   */
+  private static $client = null;
 
   /**
    * Singleton pattern for GuzzleHttp\Client
@@ -13,7 +18,7 @@ class Api {
    * @return \GuzzleHttp\Client
    */
   public static function getClient() {
-    if (self::$client === NULL) {
+    if (self::$client === null) {
       self::$client = new Client([
         'base_uri' => \Drupal::config('mage_ninja.settings')->get('base_uri'),
       ]);
@@ -23,7 +28,7 @@ class Api {
   }
 
   /**
-   * Requests a token from the Magento API.
+   * Requests an admin token from the Magento API.
    *
    * @return string
    */
