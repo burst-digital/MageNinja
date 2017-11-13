@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hmc\Api;
+namespace Drupal\mage_ninja\Api;
 
 use GuzzleHttp\Client;
 
@@ -15,7 +15,7 @@ class Api {
   public static function getClient() {
     if (self::$client === NULL) {
       self::$client = new Client([
-        'base_uri' => \Drupal::config('hmc.settings')->get('base_uri'),
+        'base_uri' => \Drupal::config('mage_ninja.settings')->get('base_uri'),
       ]);
     }
 
@@ -28,12 +28,12 @@ class Api {
    * @return string
    */
   public static function getAdminToken() {
-    $config = \Drupal::config('hmc.settings');
+    $config = \Drupal::config('mage_ninja.settings');
 
     if ($config->get('admin_token') === null) {
       $client = self::getClient();
 
-      $config = \Drupal::config('hmc.settings');
+      $config = \Drupal::config('mage_ninja.settings');
       $username = $config->get('admin_username'); // TODO: Remove test value 'burst';
       $password = $config->get('admin_password'); // TODO: Remove test value '73xnY83383G6aC68';
 
@@ -50,7 +50,7 @@ class Api {
       // Trim, because token is returned with surrounding double quotes (i.e.: "thisisatoken").
       $token = trim($response->getBody(), '"');
 
-      \Drupal::service('config.factory')->getEditable('hmc.settings')->set('admin_token', $token)->save();
+      \Drupal::service('config.factory')->getEditable('mage_ninja.settings')->set('admin_token', $token)->save();
     }
 
     return $config->get('admin_token');

@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\hmc\Controller;
+namespace Drupal\mage_ninja\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\hmc\Api\Api;
-use Drupal\hmc\Api\JsonExceptionResponse;
-use Drupal\hmc\Api\SearchCriteriaBuilder;
-use Drupal\hmc\Entity\HmcProduct;
+use Drupal\mage_ninja\Api\Api;
+use Drupal\mage_ninja\Api\JsonExceptionResponse;
+use Drupal\mage_ninja\Api\SearchCriteriaBuilder;
+use Drupal\mage_ninja\Entity\MageNinjaProduct;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -46,7 +46,7 @@ class ProductController extends ControllerBase {
    * @param int $pageSize
    * @param int $currentPage
    *
-   * @return \Drupal\hmc\Api\JsonExceptionResponse|\Symfony\Component\HttpFoundation\JsonResponse
+   * @return \Drupal\mage_ninja\Api\JsonExceptionResponse|\Symfony\Component\HttpFoundation\JsonResponse
    */
   public function getByPage($currentPage, $pageSize) {
     try {
@@ -85,13 +85,13 @@ class ProductController extends ControllerBase {
       foreach($productIds as $productId) {
         $processedProductsCount++;
 
-        /** @var HmcProduct $productEntity */
-        $productEntity = \Drupal::entityQuery('hmc_product')
+        /** @var MageNinjaProduct $productEntity */
+        $productEntity = \Drupal::entityQuery('MageNinja_product')
           ->condition('reference_id', $productId)
           ->execute();
 
         if(empty($productEntity)) {
-          HmcProduct::create([
+          MageNinjaProduct::create([
             'reference_id' => $productId
           ])->save();
 
@@ -99,13 +99,13 @@ class ProductController extends ControllerBase {
         }
       }
 
-      \Drupal::logger('hmc')->debug('Import: ' . $processedProductsCount . ' products processed.');
-      \Drupal::logger('hmc')->info('Import: ' . $createdProductsCount . ' products imported.');
-      \Drupal::logger('hmc')->notice('Import: ' . $deletedProductsCount . ' products deleted.');
+      \Drupal::logger('mage_ninja')->debug('Import: ' . $processedProductsCount . ' products processed.');
+      \Drupal::logger('mage_ninja')->info('Import: ' . $createdProductsCount . ' products imported.');
+      \Drupal::logger('mage_ninja')->notice('Import: ' . $deletedProductsCount . ' products deleted.');
 
 //      TODO: Don't import in one big request, but in batches
 //      /** @var \Drupal\Core\Queue\QueueInterface $queue */
-//      $queue = \Drupal::queue('hmc_product_import', TRUE);
+//      $queue = \Drupal::queue('MageNinja_product_import', TRUE);
 //
 //      $queue->createItem($productIds);
 
@@ -117,18 +117,18 @@ class ProductController extends ControllerBase {
 
   public function importById($id) {
     try {
-      $productEntity = \Drupal::entityQuery('hmc_product')
+      $productEntity = \Drupal::entityQuery('mage_ninja_product')
         ->condition('reference_id', $id)
         ->execute();
 
       if (empty($productEntity)) {
-        $productEntity = HmcProduct::create([
+        $productEntity = MageNinjaProduct::create([
           'reference_id' => $id
         ]);
         $productEntity->save();
       }
 
-      \Drupal::logger('hmc')->info('Import: product with ID: \'' . $id . '\' imported.');
+      \Drupal::logger('mage_ninja')->info('Import: product with ID: \'' . $id . '\' imported.');
 
       return new RedirectResponse('/');
     } catch (RequestException $e) {
@@ -139,7 +139,7 @@ class ProductController extends ControllerBase {
   /**
    * Get all product Ids from Magento
    *
-   * @return \Drupal\hmc\Api\JsonExceptionResponse|\Symfony\Component\HttpFoundation\JsonResponse
+   * @return \Drupal\mage_ninja\Api\JsonExceptionResponse|\Symfony\Component\HttpFoundation\JsonResponse
    */
   public function getAllIds() {
     try {

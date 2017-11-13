@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\hmc\Entity;
+namespace Drupal\mage_ninja\Entity;
 
 use Drupal\views\EntityViewsData;
 
 /**
- * Provides Views data for hmc product entities.
+ * Provides Views data for mage_ninja product entities.
  */
-class HmcProductViewsData extends EntityViewsData {
+class MageNinjaProductViewsData extends EntityViewsData {
 
   /**
    * {@inheritdoc}

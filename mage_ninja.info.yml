@@ -1,0 +1,8 @@
+name: MageNinja
+type: module
+description: 'MageNinja connects Magento 2 to Drupal 8, adding a mage_ninja_product custom content entity that can be referenced in content types.'
+core: 8.x
+package: MageNinja
+dependencies:
+  - drupal:rest
+  - node

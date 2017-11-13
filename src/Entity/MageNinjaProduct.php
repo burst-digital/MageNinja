@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hmc\Entity;
+namespace Drupal\mage_ninja\Entity;
 
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\ContentEntityBase;
@@ -8,17 +8,17 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
- * Defines the hmc product entity.
+ * Defines the mage_ninja product entity.
  *
- * @ingroup hmc
+ * @ingroup mage_ninja
  *
  * @ContentEntityType(
- *   id = "hmc_product",
- *   label = @Translation("hmc product"),
+ *   id = "mage_ninja_product",
+ *   label = @Translation("mage_ninja product"),
  *   handlers = {
- *     "access" = "Drupal\hmc\HmcEntityAccessControlHandler"
+ *     "access" = "Drupal\mage_ninja\MageNinjaEntityAccessControlHandler"
  *   },
- *   base_table = "hmc_product",
+ *   base_table = "MageNinja_product",
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
@@ -26,7 +26,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   }
  * )
  */
-class HmcProduct extends ContentEntityBase implements HmcProductInterface {
+class MageNinjaProduct extends ContentEntityBase implements MageNinjaProductInterface {
   use EntityChangedTrait;
 
   /**
@@ -38,18 +38,18 @@ class HmcProduct extends ContentEntityBase implements HmcProductInterface {
     // Standard field, used as unique if primary index.
     $fields['id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('ID'))
-      ->setDescription(t('The ID of the hmc product entity.'))
+      ->setDescription(t('The ID of the mage_ninja product entity.'))
       ->setReadOnly(TRUE);
 
     // Standard field, unique outside of the scope of the current project.
     $fields['uuid'] = BaseFieldDefinition::create('uuid')
       ->setLabel(t('UUID'))
-      ->setDescription(t('The UUID of the hmc product entity.'))
+      ->setDescription(t('The UUID of the mage_ninja product entity.'))
       ->setReadOnly(TRUE);
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
-      ->setDescription(t('The name of the hmc product entity.'))
+      ->setDescription(t('The name of the mage_ninja product entity.'))
       ->setSettings([
         'max_length' => 255,
         'text_processing' => 0,
@@ -73,7 +73,7 @@ class HmcProduct extends ContentEntityBase implements HmcProductInterface {
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
-      ->setDescription(t('A boolean indicating whether the hmc product is published.'))
+      ->setDescription(t('A boolean indicating whether the mage_ninja product is published.'))
       ->setDefaultValue(TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')

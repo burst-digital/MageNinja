@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hmc;
+namespace Drupal\mage_ninja;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
@@ -8,11 +8,11 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines the access control handler for the hmc_product entity type.
+ * Defines the access control handler for the MageNinja_product entity type.
  *
- * @see \Drupal\hmc\Entity\HmcProduct
+ * @see \Drupal\mage_ninja\Entity\MageNinjaProduct
  */
-class HmcEntityAccessControlHandler extends EntityAccessControlHandler {
+class MageNinjaEntityAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
