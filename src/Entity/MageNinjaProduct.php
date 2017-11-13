@@ -87,10 +87,6 @@ class MageNinjaProduct extends ContentEntityBase implements MageNinjaProductInte
     return $fields;
   }
 
-  public function getProduct() {
-
-  }
-
   /**
    * {@inheritdoc}
    */
