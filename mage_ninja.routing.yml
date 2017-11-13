@@ -1,0 +1,49 @@
+MageNinja.token:
+  path: 'mage_ninja/token/{username}/{password}'
+  defaults:
+    _controller: '\Drupal\mage_ninja\Controller\ApiController::getCustomerToken'
+  requirements:
+    _permission: 'access content'
+
+MageNinja.admintoken:
+  path: 'mage_ninja/token/admin'
+  defaults:
+    _controller: '\Drupal\mage_ninja\Controller\ApiController::getAdminToken'
+  requirements:
+    _permission: 'access content'
+
+MageNinja.product:
+  path: 'mage_ninja/product/{id}'
+  defaults:
+    _controller: '\Drupal\mage_ninja\Controller\ProductController::getById'
+  requirements:
+    _permission: 'access content'
+
+MageNinja.import:
+  path: 'mage_ninja/import'
+  defaults:
+    _controller: '\Drupal\mage_ninja\Controller\ProductController::import'
+  requirements:
+    _permission: 'access content'
+
+MageNinja.import_product:
+  path: 'mage_ninja/import/{id}'
+  defaults:
+    _controller: '\Drupal\mage_ninja\Controller\ProductController::importById'
+  requirements:
+    _permission: 'access content'
+
+MageNinja.product_page:
+  path: 'mage_ninja/product/page/{currentPage}/{pageSize}'
+  defaults:
+    _controller: '\Drupal\mage_ninja\Controller\ProductController::getByPage'
+  requirements:
+    _permission: 'access content'
+
+MageNinja.config:
+  path: 'admin/config/services/mage_ninja'
+  defaults:
+    _form: '\Drupal\mage_ninja\Form\ConfigForm'
+    _title: 'Headless Magento Connection'
+  requirements:
+    _permission: 'administer site configuration'

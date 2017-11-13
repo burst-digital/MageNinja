@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\hmc\Plugin\QueueWorker;
+namespace Drupal\mage_ninja\Plugin\QueueWorker;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
-use Drupal\hmc\Entity\MagentoProduct;
+use Drupal\mage_ninja\Entity\MageNinjaProduct;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Imports all Magento products into Drupal.
  *
  * @QueueWorker(
- *   id = "hmc_product_import"
+ *   id = "mage_ninja_product_import"
  *   title = @Translation("Headless Magento Connection: product import")
  *   cron = {"time" = 60}
  * )
@@ -23,7 +23,7 @@ class ImportQueueWorker extends QueueWorkerBase implements ContainerFactoryPlugi
    */
   public function processItem($data) {
     foreach($data as $productId) {
-      MagentoProduct::create([
+      MageNinjaProduct::create([
         'reference_id' => $productId
       ])->save();
     }

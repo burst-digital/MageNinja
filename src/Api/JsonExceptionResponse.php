@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hmc\Api;
+namespace Drupal\mage_ninja\Api;
 
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;

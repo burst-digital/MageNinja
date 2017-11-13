@@ -1,1 +1,1 @@
-Headless magento connection
+MageNinja

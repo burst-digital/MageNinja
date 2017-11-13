@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hmc\Plugin\Field\FieldType;
+namespace Drupal\mage_ninja\Plugin\Field\FieldType;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -8,24 +8,24 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Defines the 'hmc_entity_reference' entity field type.
+ * Defines the 'MageNinja_entity_reference' entity field type.
  *
  * @FieldType(
- *   id = "hmc_product",
- *   label = @Translation("HMC Product"),
- *   description = @Translation("A hmc product containing the reference ID to the product in Magento."),
+ *   id = "mage_ninja_product",
+ *   label = @Translation("MageNinja Product"),
+ *   description = @Translation("A mage_ninja product containing the reference ID to the product in Magento."),
  *   category = @Translation("Reference"),
  *   default_widget = "entity_reference_autocomplete",
- *   list_class = "\Drupal\hmc\Plugin\Field\FieldType\HmcEntityReferenceFieldItemList",
+ *   list_class = "\Drupal\mage_ninja\Plugin\Field\FieldType\MageNinjaEntityReferenceFieldItemList",
  * )
  */
-class HmcEntityReferenceItem extends EntityReferenceItem {
+class MageNinjaEntityReferenceItem extends EntityReferenceItem {
   /**
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
     return [
-        'target_type' => 'hmc_product',
+        'target_type' => 'MageNinja_product',
       ] + parent::defaultStorageSettings();
   }
 
@@ -36,7 +36,7 @@ class HmcEntityReferenceItem extends EntityReferenceItem {
     return [
       'columns' => [
         'target_id' => [
-          'description' => 'The hmc product entity.',
+          'description' => 'The mage_ninja product entity.',
           'type' => 'varchar_ascii',
           'length' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
         ]

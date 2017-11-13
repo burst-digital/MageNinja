@@ -1,0 +1,13 @@
+mage_ninja.admin:
+  title: 'MageNinja'
+  description: 'Configure the MageNinja module'
+  parent: system.admin_config_services
+  route_name: mage_ninja.config
+  weight: 100
+
+mage_ninja.sync:
+  title: 'Sync MageNinja'
+  description: 'Synchronize magento products from Magento to Drupal.'
+  parent: system.admin_content
+  route_name: mage_ninja.import
+  weight: 100

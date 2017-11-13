@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hmc\Form;
+namespace Drupal\mage_ninja\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -11,14 +11,14 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['hmc.settings'];
+    return ['mage_ninja.settings'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'hmc_config_form';
+    return 'MageNinja_config_form';
   }
 
   /**
@@ -26,7 +26,7 @@ class ConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $config = $this->config('hmc.settings');
+    $config = $this->config('mage_ninja.settings');
 
     $form['base_uri'] = [
       '#type' => 'textfield',
@@ -56,7 +56,7 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->config('hmc.settings');
+    $config = $this->config('mage_ninja.settings');
 
     $config->set('base_uri', $form_state->getValue('base_uri'));
     $config->set('admin_username', $form_state->getValue('admin_username'));

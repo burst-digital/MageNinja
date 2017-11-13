@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\hmc\Controller;
+namespace Drupal\mage_ninja\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\hmc\Api\JsonExceptionResponse;
-use Drupal\hmc\Api\Api;
+use Drupal\mage_ninja\Api\JsonExceptionResponse;
+use Drupal\mage_ninja\Api\Api;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

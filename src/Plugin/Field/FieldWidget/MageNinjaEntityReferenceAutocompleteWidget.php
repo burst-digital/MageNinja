@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hmc\Plugin\Field\FieldWidget;
+namespace Drupal\mage_ninja\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;
 
@@ -8,14 +8,14 @@ use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget
  * Implementation of the 'entity_reference_autocomplete' widget.
  *
  * @FieldWidget(
- *   id = "hmc_entity_reference_autocomplete",
+ *   id = "mage_ninja_entity_reference_autocomplete",
  *   label = @Translation("Autocomplete"),
  *   description = @Translation("An autocomplete text field."),
  *   field_types = {
- *     "hmc"
+ *     "mage_ninja"
  *   }
  * )
  */
-class HmcEntityReferenceAutocompleteWidget extends EntityReferenceAutocompleteWidget {
+class MageNinjaEntityReferenceAutocompleteWidget extends EntityReferenceAutocompleteWidget {
 
 }
