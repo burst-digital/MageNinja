@@ -17,7 +17,9 @@ class SearchCriteriaBuilder {
     $criteriaString = '';
     $index = 0;
     foreach($this->criteria as $criterion => $value) {
-      if($index > 0) {
+      if($index === 0) {
+        $criteriaString .= '?';
+      } else {
         $criteriaString .= '&';
       }
       $criteriaString .= self::PREFIX;

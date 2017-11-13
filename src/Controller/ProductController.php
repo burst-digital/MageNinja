@@ -59,7 +59,7 @@ class ProductController extends ControllerBase {
         ->add(['[pageSize]' => $pageSize])
         ->add(['[currentPage]' => $currentPage]);
 
-      $endpoint = 'V1/products?' . $searchCriteria;
+      $endpoint = 'V1/products' . $searchCriteria;
       $options = [
         'headers' => $authHeader
       ];
@@ -77,6 +77,7 @@ class ProductController extends ControllerBase {
     try {
       /** @var array $productCount */
       $productIds = json_decode($this->getAllIds()->getContent());
+      // TODO: Check for errors like 401 Unauthorized (instead of "importing" product with ID of 401)
 
       $processedProductsCount = 0;
       $createdProductsCount = 0;
