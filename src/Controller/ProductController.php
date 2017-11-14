@@ -10,7 +10,6 @@ use Drupal\mage_ninja\Entity\MageNinjaProduct;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Serializer\Serializer;
 
 class ProductController extends ControllerBase {
   /**
@@ -88,8 +87,11 @@ class ProductController extends ControllerBase {
       /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
       $decoder = \Drupal::service('serializer');
 
+      /** @var array $result */
+      $result = $decoder->decode($response->getBody(), 'json');
+
       /** @var array $products */
-      $products = $decoder->decode($response->getBody(), 'json');
+      $products = $result['items'];
 
       return new JsonResponse($products);
     } catch (RequestException $e) {
@@ -105,7 +107,8 @@ class ProductController extends ControllerBase {
   public function import() {
     try {
       /** @var array $productCount */
-      $productIds = json_decode($this->getAllIds()->getContent());
+      $productIds = $this->getAllIds();
+
       // TODO: Check for errors like 401 Unauthorized (instead of "importing" product with ID of 401)
 
       /** @var int $processedProductsCount */
@@ -186,7 +189,7 @@ class ProductController extends ControllerBase {
   /**
    * Get all product Ids from Magento
    *
-   * @return \Drupal\mage_ninja\Api\JsonExceptionResponse|\Symfony\Component\HttpFoundation\JsonResponse
+   * @return int[]|\Symfony\Component\HttpFoundation\JsonResponse
    */
   public function getAllIds() {
     try {
@@ -206,9 +209,14 @@ class ProductController extends ControllerBase {
 
       /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $client->get($endpoint, $options);
-      $productIds = json_decode($response->getBody());
 
-      return new JsonResponse($productIds);
+      /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
+      $decoder = \Drupal::service('serializer');
+
+      /** @var int[] $products */
+      $productIds = $decoder->decode($response->getBody(), 'json');
+
+      return $productIds;
     } catch (RequestException $e) {
       return new JsonExceptionResponse($e);
     }
