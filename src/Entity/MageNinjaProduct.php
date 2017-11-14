@@ -33,6 +33,7 @@ class MageNinjaProduct extends ContentEntityBase implements MageNinjaProductInte
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+    /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $fields */
     $fields = parent::baseFieldDefinitions($entity_type);
 
     // Standard field, used as unique if primary index.

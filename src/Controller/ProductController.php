@@ -22,8 +22,13 @@ class ProductController extends ControllerBase {
    */
   public function getById($id) {
     try {
+      /** @var \GuzzleHttp\Client $client */
       $client = Api::getClient();
+
+      /** @var string $token */
       $token = Api::getAdminToken();
+
+      /** @var array $authHeader */
       $authHeader = Api::getAuthHeader($token);
 
       $endpoint = 'V1/products/id/' . $id;
@@ -31,6 +36,7 @@ class ProductController extends ControllerBase {
         'headers' => $authHeader
       ];
 
+      /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $client->get($endpoint, $options);
       $product = json_decode($response->getBody());
 
@@ -50,10 +56,16 @@ class ProductController extends ControllerBase {
    */
   public function getByPage($currentPage, $pageSize) {
     try {
+      /** @var \GuzzleHttp\Client $client */
       $client = Api::getClient();
+
+      /** @var string $token */
       $token = Api::getAdminToken();
+
+      /** @var array $authHeader */
       $authHeader = Api::getAuthHeader($token);
 
+      /** @var SearchCriteriaBuilder $searchCriteria */
       $searchCriteria = new SearchCriteriaBuilder();
       $searchCriteria
         ->add(['[pageSize]' => $pageSize])
@@ -128,9 +140,11 @@ class ProductController extends ControllerBase {
   }
 
   /**
-   *
+   * Create a new MageNinjaProduct entity, if one does not exist with
+   * the provided reference_id.
    *
    * @param int $id
+   *  The reference id (Magento product ID)
    *
    * @return JsonExceptionResponse|RedirectResponse
    */
@@ -166,7 +180,11 @@ class ProductController extends ControllerBase {
     try {
       /** @var \GuzzleHttp\Client $client */
       $client = Api::getClient();
+
+      /** @var string $token */
       $token = Api::getAdminToken();
+
+      /** @var array $authHeader */
       $authHeader = Api::getAuthHeader($token);
 
       $endpoint = 'V1/catalog/products';
@@ -174,6 +192,7 @@ class ProductController extends ControllerBase {
         'headers' => $authHeader
       ];
 
+      /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $client->get($endpoint, $options);
       $productIds = json_decode($response->getBody());
 

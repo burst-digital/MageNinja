@@ -22,6 +22,7 @@ class ApiController extends ControllerBase {
    */
   public function getCustomerToken($username, $password) {
     try {
+      /** @var string $token */
       $token = Api::getCustomerToken($username, $password);
 
       return new JsonResponse(['token' => $token]);
@@ -37,6 +38,7 @@ class ApiController extends ControllerBase {
    */
   public function getAdminToken() {
     try {
+      /** @var string $token */
       $token = Api::getAdminToken();
 
       return new JsonResponse(['token' => $token]);

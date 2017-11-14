@@ -28,6 +28,7 @@ class SearchCriteriaBuilder {
    * @return $this
    */
   public function add($criterion) {
+    /** @var array criteria */
     $this->criteria = array_merge($this->criteria, $criterion);
 
     return $this;
@@ -35,13 +36,16 @@ class SearchCriteriaBuilder {
 
   /**
    * Returns string formatted as Magento search criteria.
-   *
-   * Example: ?searchCriteria[pageSize]=10&searchCriteria[currentPage]=1
+   * i.e.: ?searchCriteria[pageSize]=10&searchCriteria[currentPage]=1
    *
    * @return string
+   *  The criteria string.
    */
   public function __toString() {
+    /** @var string $criteriaString */
     $criteriaString = '';
+
+    /** @var int $index */
     $index = 0;
     foreach($this->criteria as $criterion => $value) {
       if($index === 0) {

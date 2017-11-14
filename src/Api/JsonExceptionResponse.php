@@ -14,6 +14,7 @@ class JsonExceptionResponse extends JsonResponse {
    * @param Exception $exception
    */
   public function __construct($exception) {
+    /** @var array $data */
     $data = [
       'code' => $exception->getCode(),
       'message' => $exception->getMessage(),
