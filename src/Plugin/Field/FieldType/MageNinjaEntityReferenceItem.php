@@ -8,11 +8,11 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Defines the 'MageNinja_entity_reference' entity field type.
+ * Defines the 'mage_ninja_entity_reference' entity field type.
  *
  * @FieldType(
  *   id = "mage_ninja_product",
- *   label = @Translation("MageNinja Product"),
+ *   label = @Translation("Mage Ninja Product"),
  *   description = @Translation("A mage_ninja product containing the reference ID to the product in Magento."),
  *   category = @Translation("Reference"),
  *   default_widget = "entity_reference_autocomplete",
@@ -25,7 +25,7 @@ class MageNinjaEntityReferenceItem extends EntityReferenceItem {
    */
   public static function defaultStorageSettings() {
     return [
-        'target_type' => 'MageNinja_product',
+        'target_type' => 'mage_ninja_product',
       ] + parent::defaultStorageSettings();
   }
 

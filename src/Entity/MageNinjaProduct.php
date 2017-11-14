@@ -18,7 +18,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   handlers = {
  *     "access" = "Drupal\mage_ninja\MageNinjaEntityAccessControlHandler"
  *   },
- *   base_table = "MageNinja_product",
+ *   base_table = "mage_ninja_product",
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
