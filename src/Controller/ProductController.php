@@ -10,6 +10,7 @@ use Drupal\mage_ninja\Entity\MageNinjaProduct;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Serializer\Serializer;
 
 class ProductController extends ControllerBase {
   /**
@@ -38,7 +39,12 @@ class ProductController extends ControllerBase {
 
       /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $client->get($endpoint, $options);
-      $product = json_decode($response->getBody());
+
+      /** @var \Symfony\Component\Serializer\SerializerInterface $serializer */
+      $serializer = \Drupal::service('serializer');
+
+      /** @var MageNinjaProduct $product */
+      $product = $serializer->deserialize($response->getBody(), MageNinjaProduct::class, 'json');
 
       return new JsonResponse($product);
     } catch (RequestException $e) {
@@ -76,8 +82,14 @@ class ProductController extends ControllerBase {
         'headers' => $authHeader
       ];
 
+      /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $client->get($endpoint, $options);
-      $products = json_decode($response->getBody());
+
+      /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
+      $decoder = \Drupal::service('serializer');
+
+      /** @var array $products */
+      $products = $decoder->decode($response->getBody(), 'json');
 
       return new JsonResponse($products);
     } catch (RequestException $e) {
