@@ -44,6 +44,6 @@ mage_ninja.config:
   path: 'admin/config/services/mage_ninja'
   defaults:
     _form: '\Drupal\mage_ninja\Form\ConfigForm'
-    _title: 'Headless Magento Connection'
+    _title: 'Mage Ninja'
   requirements:
     _permission: 'administer site configuration'
