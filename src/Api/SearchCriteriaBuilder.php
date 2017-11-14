@@ -3,18 +3,49 @@
 namespace Drupal\mage_ninja\Api;
 
 class SearchCriteriaBuilder {
+
+  /**
+   * String that will prefix the criteria string.
+   * This prefix is required by the Magento API to indicate it is a
+   * search criteria.
+   *
+   * @const string PREFIX
+   */
   const PREFIX = 'searchCriteria';
 
+  /**
+   * Array to save the search criteria in.
+   *
+   * @var array
+   */
   private $criteria = [];
 
+  /**
+   * @param array $criterion
+   *  The criterion used to filter the search.
+   *  Format: ['[pageSize]' => 10]
+   *
+   * @return $this
+   */
   public function add($criterion) {
+    /** @var array criteria */
     $this->criteria = array_merge($this->criteria, $criterion);
 
     return $this;
   }
 
+  /**
+   * Returns string formatted as Magento search criteria.
+   * i.e.: ?searchCriteria[pageSize]=10&searchCriteria[currentPage]=1
+   *
+   * @return string
+   *  The criteria string.
+   */
   public function __toString() {
+    /** @var string $criteriaString */
     $criteriaString = '';
+
+    /** @var int $index */
     $index = 0;
     foreach($this->criteria as $criterion => $value) {
       if($index === 0) {

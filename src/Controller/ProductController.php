@@ -22,8 +22,13 @@ class ProductController extends ControllerBase {
    */
   public function getById($id) {
     try {
+      /** @var \GuzzleHttp\Client $client */
       $client = Api::getClient();
+
+      /** @var string $token */
       $token = Api::getAdminToken();
+
+      /** @var array $authHeader */
       $authHeader = Api::getAuthHeader($token);
 
       $endpoint = 'V1/products/id/' . $id;
@@ -31,6 +36,7 @@ class ProductController extends ControllerBase {
         'headers' => $authHeader
       ];
 
+      /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $client->get($endpoint, $options);
       $product = json_decode($response->getBody());
 
@@ -50,10 +56,16 @@ class ProductController extends ControllerBase {
    */
   public function getByPage($currentPage, $pageSize) {
     try {
+      /** @var \GuzzleHttp\Client $client */
       $client = Api::getClient();
+
+      /** @var string $token */
       $token = Api::getAdminToken();
+
+      /** @var array $authHeader */
       $authHeader = Api::getAuthHeader($token);
 
+      /** @var SearchCriteriaBuilder $searchCriteria */
       $searchCriteria = new SearchCriteriaBuilder();
       $searchCriteria
         ->add(['[pageSize]' => $pageSize])
@@ -73,15 +85,26 @@ class ProductController extends ControllerBase {
     }
   }
 
+  /**
+   * Import all Magento products into Drupal.
+   *
+   * @return JsonExceptionResponse|RedirectResponse
+   */
   public function import() {
     try {
       /** @var array $productCount */
       $productIds = json_decode($this->getAllIds()->getContent());
       // TODO: Check for errors like 401 Unauthorized (instead of "importing" product with ID of 401)
 
+      /** @var int $processedProductsCount */
       $processedProductsCount = 0;
+
+      /** @var int $createdProductsCount */
       $createdProductsCount = 0;
+
+      /** @var int $deletedProductsCount */
       $deletedProductsCount = 0; // TODO: implement deleting products that exist in Drupal but not in Magento
+
       foreach($productIds as $productId) {
         $processedProductsCount++;
 
@@ -104,6 +127,7 @@ class ProductController extends ControllerBase {
       \Drupal::logger('mage_ninja')->notice('Import: ' . $deletedProductsCount . ' products deleted.');
 
 //      TODO: Don't import in one big request, but in batches
+//      TODO: Use batches instead of Queue (queue is for cron)
 //      /** @var \Drupal\Core\Queue\QueueInterface $queue */
 //      $queue = \Drupal::queue('MageNinja_product_import', TRUE);
 //
@@ -115,13 +139,24 @@ class ProductController extends ControllerBase {
     }
   }
 
+  /**
+   * Create a new MageNinjaProduct entity, if one does not exist with
+   * the provided reference_id.
+   *
+   * @param int $id
+   *  The reference id (Magento product ID)
+   *
+   * @return JsonExceptionResponse|RedirectResponse
+   */
   public function importById($id) {
     try {
+      /** @var \Drupal\Core\Entity\Query\QueryInterface $productEntity */
       $productEntity = \Drupal::entityQuery('mage_ninja_product')
         ->condition('reference_id', $id)
         ->execute();
 
       if (empty($productEntity)) {
+        /** @var MageNinjaProduct $productEntity */
         $productEntity = MageNinjaProduct::create([
           'reference_id' => $id
         ]);
@@ -143,8 +178,13 @@ class ProductController extends ControllerBase {
    */
   public function getAllIds() {
     try {
+      /** @var \GuzzleHttp\Client $client */
       $client = Api::getClient();
+
+      /** @var string $token */
       $token = Api::getAdminToken();
+
+      /** @var array $authHeader */
       $authHeader = Api::getAuthHeader($token);
 
       $endpoint = 'V1/catalog/products';
@@ -152,6 +192,7 @@ class ProductController extends ControllerBase {
         'headers' => $authHeader
       ];
 
+      /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $client->get($endpoint, $options);
       $productIds = json_decode($response->getBody());
 

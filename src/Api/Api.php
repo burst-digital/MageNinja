@@ -5,7 +5,12 @@ namespace Drupal\mage_ninja\Api;
 use GuzzleHttp\Client;
 
 class Api {
-  private static $client = NULL;
+  /**
+   * Save the GuzzleHttp\Client created by the getClient() function
+   *
+   * @static \GuzzleHttp\Client|null
+   */
+  private static $client = null;
 
   /**
    * Singleton pattern for GuzzleHttp\Client
@@ -13,7 +18,8 @@ class Api {
    * @return \GuzzleHttp\Client
    */
   public static function getClient() {
-    if (self::$client === NULL) {
+    if (self::$client === null) {
+      /** @var \GuzzleHttp\Client client */
       self::$client = new Client([
         'base_uri' => \Drupal::config('mage_ninja.settings')->get('base_uri'),
       ]);
@@ -23,19 +29,24 @@ class Api {
   }
 
   /**
-   * Requests a token from the Magento API.
+   * Requests an admin token from the Magento API.
    *
    * @return string
+   *  The admin token.
    */
   public static function getAdminToken() {
+    /** @var \Drupal\Core\Config\ImmutableConfig $config */
     $config = \Drupal::config('mage_ninja.settings');
 
     if ($config->get('admin_token') === null) {
+      /** @var \GuzzleHttp\Client $client */
       $client = self::getClient();
 
-      $config = \Drupal::config('mage_ninja.settings');
-      $username = $config->get('admin_username'); // TODO: Remove test value 'burst';
-      $password = $config->get('admin_password'); // TODO: Remove test value '73xnY83383G6aC68';
+      /** @var string $username */
+      $username = $config->get('admin_username'); // TODO: Local test value 'burst';
+
+      /** @var string $password */
+      $password = $config->get('admin_password'); // TODO: Local test value '73xnY83383G6aC68';
 
       $endpoint = 'V1/integration/admin/token';
       $options = [
@@ -45,9 +56,11 @@ class Api {
         ],
       ];
 
+      /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $client->post($endpoint, $options);
 
       // Trim, because token is returned with surrounding double quotes (i.e.: "thisisatoken").
+      /** @var string $token */
       $token = trim($response->getBody(), '"');
 
       \Drupal::service('config.factory')->getEditable('mage_ninja.settings')->set('admin_token', $token)->save();
@@ -65,6 +78,7 @@ class Api {
    *  The customer's password.
    *
    * @return string
+   *  The customer token.
    *
    * @throws \GuzzleHttp\Exception\RequestException
    */
@@ -79,9 +93,11 @@ class Api {
       ],
     ];
 
+    /** @var \GuzzleHttp\Psr7\Response $response */
     $response = $client->post($endpoint, $options);
 
     // Trim, because token is returned with surrounding double quotes (i.e.: "thisisatoken").
+    /** @var string $token */
     $token = trim($response->getBody(), '"');
 
     return $token;
