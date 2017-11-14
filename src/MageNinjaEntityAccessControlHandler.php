@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines the access control handler for the MageNinja_product entity type.
+ * Defines the access control handler for the mage_ninja_product entity type.
  *
  * @see \Drupal\mage_ninja\Entity\MageNinjaProduct
  */

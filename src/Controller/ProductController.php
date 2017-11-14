@@ -109,7 +109,7 @@ class ProductController extends ControllerBase {
         $processedProductsCount++;
 
         /** @var MageNinjaProduct $productEntity */
-        $productEntity = \Drupal::entityQuery('MageNinja_product')
+        $productEntity = \Drupal::entityQuery('mage_ninja_product')
           ->condition('reference_id', $productId)
           ->execute();
 
@@ -129,7 +129,7 @@ class ProductController extends ControllerBase {
 //      TODO: Don't import in one big request, but in batches
 //      TODO: Use batches instead of Queue (queue is for cron)
 //      /** @var \Drupal\Core\Queue\QueueInterface $queue */
-//      $queue = \Drupal::queue('MageNinja_product_import', TRUE);
+//      $queue = \Drupal::queue('mage_ninja_product_import', TRUE);
 //
 //      $queue->createItem($productIds);
 

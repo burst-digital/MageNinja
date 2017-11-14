@@ -18,7 +18,7 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'MageNinja_config_form';
+    return 'mage_ninja_config_form';
   }
 
   /**
