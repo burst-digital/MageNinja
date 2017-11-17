@@ -4,5 +4,6 @@ description: 'Mage Ninja connects Magento 2 to Drupal 8, adding a mage_ninja_pro
 core: 8.x
 package: Mage Ninja
 dependencies:
-  - drupal:rest
+  - datetime
+  - rest
   - node
