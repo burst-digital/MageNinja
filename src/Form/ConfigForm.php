@@ -88,12 +88,17 @@ class ConfigForm extends ConfigFormBase {
 
   /**
    * Import all Magento products into Drupal.
+   *
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    */
   public function importAll(array &$form, FormStateInterface $form_state) {
     /** @var ProductController $controller */
     $controller = new ProductController();
 
     /** @var \Symfony\Component\HttpFoundation\JsonResponse $response */
+    // Get one product to find the total product count which is also returned
+    // from this endpoint.
     $response =  $controller->getByPage(1, 1);
 
     /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
