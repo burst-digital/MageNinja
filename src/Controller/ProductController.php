@@ -7,6 +7,7 @@ use Drupal\mage_ninja\Api\Api;
 use Drupal\mage_ninja\Api\JsonExceptionResponse;
 use Drupal\mage_ninja\Api\SearchCriteriaBuilder;
 use Drupal\mage_ninja\Entity\MageNinjaProduct;
+use Drupal\mage_ninja\Import\Batch;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -87,56 +88,54 @@ class ProductController extends ControllerBase {
 
   /**
    * Import all Magento products into Drupal.
-   *
-   * @return JsonExceptionResponse|RedirectResponse
    */
   public function import() {
-    try {
-      /** @var array $productCount */
-      $productIds = json_decode($this->getAllIds()->getContent());
-      // TODO: Check for errors like 401 Unauthorized (instead of "importing" product with ID of 401)
+    /** @var int $pageSize */
+    $pageSize = 100;
 
-      /** @var int $processedProductsCount */
-      $processedProductsCount = 0;
+    /** @var int $currentPage */
+    $currentPage = 1;
 
-      /** @var int $createdProductsCount */
-      $createdProductsCount = 0;
+    /** @var int $totalPages */
+    // Needs to be set because it may no be initialized in try{}
+    $totalPages = 1;
 
-      /** @var int $deletedProductsCount */
-      $deletedProductsCount = 0; // TODO: implement deleting products that exist in Drupal but not in Magento
+    /** @var array $batches */
+    $batches = [];
+    do {
+      try {
+        /** @var JsonResponse $response */
+        $response = self::getByPage($currentPage, $pageSize);
 
-      foreach($productIds as $productId) {
-        $processedProductsCount++;
+        /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
+        $decoder = \Drupal::service('serializer');
 
-        /** @var MageNinjaProduct $productEntity */
-        $productEntity = \Drupal::entityQuery('mage_ninja_product')
-          ->condition('reference_id', $productId)
-          ->execute();
+        /** @var array $page */
+        $page = $decoder->decode($response->getContent(), 'json');
 
-        if(empty($productEntity)) {
-          MageNinjaProduct::create([
-            'reference_id' => $productId
-          ])->save();
+        /** @var int $totalPages */
+        // Always round up to make sure pages with less than $pageSize are processed.
+        // Read it every page in case the total_count changes.
+        $totalPages = ceil($page['total_count'] / $pageSize);
 
-          $createdProductsCount++;
-        }
+        /** @var array $batch */
+        $items = $page['items'];
+
+        \Drupal::logger('mage_ninja')->notice('Page ' . $currentPage);
+        $batches[$currentPage] = new Batch($items);
+
+        $currentPage++;
+      } catch(\Exception $e) {
+        \Drupal::logger('mage_ninja')->error('An error occured in batch ' . $currentPage . ': ' . $e);
       }
+    } while($totalPages > $currentPage);
 
-      \Drupal::logger('mage_ninja')->debug('Import: ' . $processedProductsCount . ' products processed.');
-      \Drupal::logger('mage_ninja')->info('Import: ' . $createdProductsCount . ' products imported.');
-      \Drupal::logger('mage_ninja')->notice('Import: ' . $deletedProductsCount . ' products deleted.');
-
-//      TODO: Don't import in one big request, but in batches
-//      TODO: Use batches instead of Queue (queue is for cron)
-//      /** @var \Drupal\Core\Queue\QueueInterface $queue */
-//      $queue = \Drupal::queue('mage_ninja_product_import', TRUE);
-//
-//      $queue->createItem($productIds);
-
-      return new RedirectResponse('/');
-    } catch (RequestException $e) {
-      return new JsonExceptionResponse($e);
+    foreach($batches as $batch) {
+      /** @var Batch $batch */
+      $batch->start();
     }
+
+    return new RedirectResponse('admin');
   }
 
   /**

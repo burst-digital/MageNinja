@@ -4,6 +4,7 @@ namespace Drupal\mage_ninja\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\mage_ninja\Controller\ProductController;
 
 class ConfigForm extends ConfigFormBase {
 
@@ -25,31 +26,49 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildForm($form, $form_state);
     $config = $this->config('mage_ninja.settings');
 
-    $form['base_uri'] = [
+    $form['import'] = [
+      '#type' => 'details',
+      '#title' => t('Import'),
+      '#open' => TRUE,
+    ];
+
+    $form['import']['import_all'] = [
+      '#type' => 'submit',
+      '#value' => t('Import all products'),
+      '#submit' => ['::importAll'],
+    ];
+
+    $form['connection'] = [
+      '#type' => 'details',
+      '#title' => t('Connection'),
+      '#open' => TRUE,
+    ];
+
+
+    $form['connection']['base_uri'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Magento base URI'),
       '#default_value' => $config->get('base_uri'),
       '#required' => TRUE
     ];
 
-    $form['admin_username'] = [
+    $form['connection']['admin_username'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Magento admin username'),
       '#default_value' => $config->get('admin_username'),
       '#required' => TRUE
     ];
 
-    $form['admin_password'] = [
+    $form['connection']['admin_password'] = [
       '#type' => 'password',
       '#title' => $this->t('Magento admin password'),
       '#default_value' => $config->get('admin_password'),
       '#required' => TRUE
     ];
 
-    return $form;
+    return parent::buildForm($form, $form_state);;
   }
 
   /**
@@ -67,5 +86,52 @@ class ConfigForm extends ConfigFormBase {
     parent::submitForm($form, $form_state);
   }
 
+  /**
+   * Import all Magento products into Drupal.
+   */
+  public function importAll(array &$form, FormStateInterface $form_state) {
+    /** @var ProductController $controller */
+    $controller = new ProductController();
 
+    /** @var \Symfony\Component\HttpFoundation\JsonResponse $response */
+    $response =  $controller->getByPage(1, 1);
+
+    /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
+    $decoder = \Drupal::service('serializer');
+
+    /** @var array $page */
+    $page = $decoder->decode($response->getContent(), 'json');
+
+    /////////////////////////////////////////////
+
+    /** @var int $pageSize */
+    $pageSize = 100;
+
+    /** @var int $currentPage */
+    $currentPage = 1;
+
+    /** @var array $operations */
+    $operations = [];
+
+    /** @var int $totalPages */
+    // Always round up to make sure pages with less than $pageSize are processed.
+    // Read it every page in case the total_count changes.
+    $totalPages = ceil($page['total_count'] / $pageSize);
+
+    do {
+      $operations[] = ['\Drupal\mage_ninja\Import\Batch::process', [$currentPage, $pageSize]];
+      $currentPage++;
+    } while($totalPages >= $currentPage);
+
+
+    $batch = [
+      'title' => t('MageNinja processing batch import'),
+      'operations' => $operations,
+      'init_message' => t('MageNinja initializing batch import'),
+      'progress_message' => t('MageNinja processed @current out of @total (@remaining remaining). Estimated time remaining: @estimate (@elapsed elapsed).'),
+      'error_message' => t('MageNinja encountered an error during the batch import process.')
+    ];
+
+    batch_set($batch);
+  }
 }
