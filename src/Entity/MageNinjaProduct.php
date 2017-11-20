@@ -29,6 +29,19 @@ use Drupal\Core\Entity\EntityTypeInterface;
 class MageNinjaProduct extends ContentEntityBase implements MageNinjaProductInterface {
   use EntityChangedTrait;
 
+  // Set price decimal scale and precision to the same values as in the Magento database.
+  /**
+   * @var int PRICE_PRECISION
+   *  The total amount of digits in the number.
+   */
+  const PRICE_PRECISION = 12;
+
+  /**
+   * @var int PRICE_PRECISION
+   *  The amount of digits to the right of the decimal point in the number.
+   */
+  const PRICE_SCALE = 4;
+
   /**
    * {@inheritdoc}
    */
@@ -68,10 +81,6 @@ class MageNinjaProduct extends ContentEntityBase implements MageNinjaProductInte
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['reference_id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Reference ID'))
-      ->setDescription(t('The product ID as taken from Magento.'));
-
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the mage_ninja product is published.'))
@@ -84,6 +93,46 @@ class MageNinjaProduct extends ContentEntityBase implements MageNinjaProductInte
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'));
+
+
+    /*
+     * Magento product fields
+     */
+
+    // Magento product ID
+    $fields['reference_id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Reference ID'))
+      ->setDescription(t('The product ID in Magento.'))
+      ->setReadOnly(TRUE);
+
+    $fields['sku'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('SKU'))
+      ->setDescription(t('The SKU in Magento.'))
+      ->setReadOnly(TRUE);
+
+    $fields['price'] = BaseFieldDefinition::create('decimal')
+      ->setLabel(t('Price'))
+      ->setDescription(t('The price in Magento.'))
+      ->setReadOnly(TRUE)
+      ->setSetting('scale', self::PRICE_SCALE)
+      ->setSetting('precision', self::PRICE_PRECISION);
+
+    $fields['special_price'] = BaseFieldDefinition::create('decimal')
+      ->setLabel(t('Special price'))
+      ->setDescription(t('The special price in Magento.'))
+      ->setReadOnly(TRUE)
+      ->setSetting('scale', self::PRICE_SCALE)
+      ->setSetting('precision', self::PRICE_PRECISION);
+
+    $fields['special_price_from'] = BaseFieldDefinition::create('datetime')
+      ->setLabel(t('Special price from'))
+      ->setDescription(t('The datetime from which the special price is active.'))
+      ->setReadOnly(TRUE);
+
+    $fields['special_price_to'] = BaseFieldDefinition::create('datetime')
+      ->setLabel(t('Special price to'))
+      ->setDescription(t('The datetime to which the special price is active.'))
+      ->setReadOnly(TRUE);
 
     return $fields;
   }

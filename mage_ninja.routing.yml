@@ -19,13 +19,6 @@ mage_ninja.product:
   requirements:
     _permission: 'access content'
 
-mage_ninja.import:
-  path: 'mage_ninja/import'
-  defaults:
-    _controller: '\Drupal\mage_ninja\Controller\ProductController::import'
-  requirements:
-    _permission: 'access content'
-
 mage_ninja.import_product:
   path: 'mage_ninja/import/{id}'
   defaults:
