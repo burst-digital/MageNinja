@@ -6,6 +6,15 @@ use Drupal\mage_ninja\Entity\MageNinjaProduct;
 use Drupal\mage_ninja\Controller\ProductController;
 
 class Batch {
+  /**
+   * Processes a page of items.
+   *
+   * @param $currentPage
+   *  The page number
+   *
+   * @param $pageSize
+   *  The amount of items on the page
+   */
   public static function process($currentPage, $pageSize) {
     $controller = new ProductController();
 
@@ -15,11 +24,8 @@ class Batch {
     /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
     $decoder = \Drupal::service('serializer');
 
-    /** @var array $page */
-    $page = $decoder->decode($response->getContent(), 'json');
-
-    /** @var array $batch */
-    $items = $page['items'];
+    /** @var array $items */
+    $items = $decoder->decode($response->getContent(), 'json');
 
     foreach ($items as $item) {
       /** @var MageNinjaProduct $productEntity */

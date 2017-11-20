@@ -5,8 +5,11 @@ namespace Drupal\mage_ninja\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\mage_ninja\Controller\ProductController;
+use Drupal\mage_ninja\Import\Batch;
 
 class ConfigForm extends ConfigFormBase {
+  /** @var int PAGE_SIZE */
+  const PAGE_SIZE = 100;
 
   /**
    * {@inheritdoc}
@@ -96,21 +99,8 @@ class ConfigForm extends ConfigFormBase {
     /** @var ProductController $controller */
     $controller = new ProductController();
 
-    /** @var \Symfony\Component\HttpFoundation\JsonResponse $response */
-    // Get one product to find the total product count which is also returned
-    // from this endpoint.
-    $response =  $controller->getByPage(1, 1);
-
-    /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
-    $decoder = \Drupal::service('serializer');
-
-    /** @var array $page */
-    $page = $decoder->decode($response->getContent(), 'json');
-
-    /////////////////////////////////////////////
-
-    /** @var int $pageSize */
-    $pageSize = 100;
+    /** @var int $productCounnt */
+    $productCount = $controller->getProductCount();
 
     /** @var int $currentPage */
     $currentPage = 1;
@@ -119,12 +109,12 @@ class ConfigForm extends ConfigFormBase {
     $operations = [];
 
     /** @var int $totalPages */
-    // Always round up to make sure pages with less than $pageSize are processed.
+    // Always round up to make sure pages with less than PAGE_SIZE are processed.
     // Read it every page in case the total_count changes.
-    $totalPages = ceil($page['total_count'] / $pageSize);
+    $totalPages = ceil($productCount / self::PAGE_SIZE);
 
     do {
-      $operations[] = ['\Drupal\mage_ninja\Import\Batch::process', [$currentPage, $pageSize]];
+      $operations[] = ['\Drupal\mage_ninja\Import\Batch::process', [$currentPage, self::PAGE_SIZE]];
       $currentPage++;
     } while($totalPages >= $currentPage);
 
