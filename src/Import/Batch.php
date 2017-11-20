@@ -18,10 +18,6 @@ class Batch {
     /** @var array $page */
     $page = $decoder->decode($response->getContent(), 'json');
 
-    /** @var int $totalPages */
-    // Always round up to make sure pages with less than $pageSize are processed.
-    // Read it every page in case the total_count changes.
-
     /** @var array $batch */
     $items = $page['items'];
 
@@ -38,15 +34,21 @@ class Batch {
           'name' => $item['name'],
           'price' => $item['price'],
         ];
+        
+        if(isset($item['custom_attributes'])) {
+          foreach($item['custom_attributes'] as $attribute) {
+            if($attribute['attribute_code'] === 'special_price') {
+              $product['special_price'] = $attribute['value'];
+            }
 
-        if (isset($item['custom_attributes']['special_price'])) {
-          $product['special_price'] = $item['custom_attributes']['special_price'];
-        }
-        if (isset($item['custom_attributes']['special_from_date'])) {
-          $product['special_price_from'] = $item['custom_attributes']['special_from_date'];
-        }
-        if (isset($item['custom_attributes']['special_to_date'])) {
-          $product['special_price_to'] = $item['custom_attributes']['special_to_date'];
+            if($attribute['attribute_code'] === 'special_from_date') {
+              $product['special_price_from'] = $attribute['value'];
+            }
+
+            if($attribute['attribute_code'] === 'special_to_date') {
+              $product['special_price_to'] = $attribute['value'];
+            }
+          }
         }
 
         MageNinjaProduct::create($product)->save();
