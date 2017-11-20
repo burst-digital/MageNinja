@@ -134,11 +134,6 @@ class MageNinjaProduct extends ContentEntityBase implements MageNinjaProductInte
       ->setDescription(t('The datetime to which the special price is active.'))
       ->setReadOnly(TRUE);
 
-    $fields['stock_status'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('In stock'))
-      ->setDescription(t('The stock status in Magento'))
-      ->setReadOnly(TRUE);
-
     return $fields;
   }
 
