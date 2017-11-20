@@ -101,6 +101,53 @@ class ProductController extends ControllerBase {
   }
 
   /**
+   * Get the total product count from the endpoint.
+   *
+   * @return int|null
+   */
+  public function getProductCount() {
+    try {
+      /** @var \GuzzleHttp\Client $client */
+      $client = Api::getClient();
+
+      /** @var string $token */
+      $token = Api::getAdminToken();
+
+      /** @var array $authHeader */
+      $authHeader = Api::getAuthHeader($token);
+
+      /** @var SearchCriteriaBuilder $searchCriteria */
+      $searchCriteria = new SearchCriteriaBuilder();
+      $searchCriteria
+        ->add(['[pageSize]' => 1])
+        ->add(['[currentPage]' => 1]);
+
+      $endpoint = 'V1/products' . $searchCriteria;
+      $options = [
+        'headers' => $authHeader
+      ];
+
+      /** @var \GuzzleHttp\Psr7\Response $response */
+      $response = $client->get($endpoint, $options);
+
+      /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
+      $decoder = \Drupal::service('serializer');
+
+      /** @var array $result */
+      $result = $decoder->decode($response->getBody(), 'json');
+
+      /** @var int $count */
+      $count = $result['total_count'];
+
+      return $count;
+    } catch (RequestException $e) {
+      \Drupal::logger('mage_ninja')->error($e);
+
+      return null;
+    }
+  }
+
+  /**
    * Import all Magento products into Drupal.
    */
   public function import() {
