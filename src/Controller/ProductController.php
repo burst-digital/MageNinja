@@ -101,55 +101,50 @@ class ProductController extends ControllerBase {
   }
 
   /**
-   * Import all Magento products into Drupal.
+   * Get the total product count from the endpoint.
+   *
+   * @return int|null
    */
-  public function import() {
-    /** @var int $pageSize */
-    $pageSize = 100;
+  public function getProductCount() {
+    try {
+      /** @var \GuzzleHttp\Client $client */
+      $client = Api::getClient();
 
-    /** @var int $currentPage */
-    $currentPage = 1;
+      /** @var string $token */
+      $token = Api::getAdminToken();
 
-    /** @var int $totalPages */
-    // Needs to be set because it may no be initialized in try{}
-    $totalPages = 1;
+      /** @var array $authHeader */
+      $authHeader = Api::getAuthHeader($token);
 
-    /** @var array $batches */
-    $batches = [];
-    do {
-      try {
-        /** @var JsonResponse $response */
-        $response = self::getByPage($currentPage, $pageSize);
+      /** @var SearchCriteriaBuilder $searchCriteria */
+      $searchCriteria = new SearchCriteriaBuilder();
+      $searchCriteria
+        ->add(['[pageSize]' => 1])
+        ->add(['[currentPage]' => 1]);
 
-        /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
-        $decoder = \Drupal::service('serializer');
+      $endpoint = 'V1/products' . $searchCriteria;
+      $options = [
+        'headers' => $authHeader
+      ];
 
-        /** @var array $page */
-        $page = $decoder->decode($response->getContent(), 'json');
+      /** @var \GuzzleHttp\Psr7\Response $response */
+      $response = $client->get($endpoint, $options);
 
-        /** @var int $totalPages */
-        // Always round up to make sure pages with less than $pageSize are processed.
-        // Read it every page in case the total_count changes.
-        $totalPages = ceil($page['total_count'] / $pageSize);
+      /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
+      $decoder = \Drupal::service('serializer');
 
-        /** @var array $batch */
-        $items = $page['items'];
+      /** @var array $result */
+      $result = $decoder->decode($response->getBody(), 'json');
 
-        \Drupal::logger('mage_ninja')->notice('Page ' . $currentPage);
-        $batches[$currentPage] = new Batch($items);
+      /** @var int $count */
+      $count = $result['total_count'];
 
-        $currentPage++;
-      } catch(\Exception $e) {
-        \Drupal::logger('mage_ninja')->error('An error occured in batch ' . $currentPage . ': ' . $e);
-      }
-    } while($totalPages > $currentPage);
+      return $count;
+    } catch (RequestException $e) {
+      \Drupal::logger('mage_ninja')->error($e);
 
-    foreach($batches as $batch) {
-      /** @var Batch $batch */
-      $batch->start();
+      return null;
     }
-
-    return new RedirectResponse('admin');
   }
 
   /**
