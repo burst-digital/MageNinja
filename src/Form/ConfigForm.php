@@ -8,7 +8,10 @@ use Drupal\mage_ninja\Controller\ProductController;
 use Drupal\mage_ninja\Import\Batch;
 
 class ConfigForm extends ConfigFormBase {
-  /** @var int PAGE_SIZE */
+  /**
+   * @var int PAGE_SIZE
+   *  The amount of items that will be requested per page.
+   */
   const PAGE_SIZE = 100;
 
   /**
@@ -48,7 +51,6 @@ class ConfigForm extends ConfigFormBase {
       '#title' => t('Connection'),
       '#open' => TRUE,
     ];
-
 
     $form['connection']['base_uri'] = [
       '#type' => 'textfield',
@@ -109,7 +111,7 @@ class ConfigForm extends ConfigFormBase {
     $operations = [];
 
     /** @var int $totalPages */
-    // Always round up to make sure the final page is also processed if it
+    // Round up to make sure the final page is also processed if it
     // contains less than PAGE_SIZE items.
     $totalPages = ceil($productCount / self::PAGE_SIZE);
 
