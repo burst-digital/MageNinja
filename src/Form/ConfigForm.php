@@ -109,8 +109,8 @@ class ConfigForm extends ConfigFormBase {
     $operations = [];
 
     /** @var int $totalPages */
-    // Always round up to make sure pages with less than PAGE_SIZE are processed.
-    // Read it every page in case the total_count changes.
+    // Always round up to make sure the final page is also processed if it
+    // contains less than PAGE_SIZE items.
     $totalPages = ceil($productCount / self::PAGE_SIZE);
 
     do {
