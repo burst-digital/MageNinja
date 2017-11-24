@@ -148,58 +148,6 @@ class ProductController extends ControllerBase {
   }
 
   /**
-   * Import all Magento products into Drupal.
-   */
-  public function import() {
-    /** @var int $pageSize */
-    $pageSize = 100;
-
-    /** @var int $currentPage */
-    $currentPage = 1;
-
-    /** @var int $totalPages */
-    // Needs to be set because it may no be initialized in try{}
-    $totalPages = 1;
-
-    /** @var array $batches */
-    $batches = [];
-    do {
-      try {
-        /** @var JsonResponse $response */
-        $response = self::getByPage($currentPage, $pageSize);
-
-        /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
-        $decoder = \Drupal::service('serializer');
-
-        /** @var array $page */
-        $page = $decoder->decode($response->getContent(), 'json');
-
-        /** @var int $totalPages */
-        // Always round up to make sure pages with less than $pageSize are processed.
-        // Read it every page in case the total_count changes.
-        $totalPages = ceil($page['total_count'] / $pageSize);
-
-        /** @var array $batch */
-        $items = $page['items'];
-
-        \Drupal::logger('mage_ninja')->notice('Page ' . $currentPage);
-        $batches[$currentPage] = new Batch($items);
-
-        $currentPage++;
-      } catch(\Exception $e) {
-        \Drupal::logger('mage_ninja')->error('An error occured in batch ' . $currentPage . ': ' . $e);
-      }
-    } while($totalPages > $currentPage);
-
-    foreach($batches as $batch) {
-      /** @var Batch $batch */
-      $batch->start();
-    }
-
-    return new RedirectResponse('admin');
-  }
-
-  /**
    * Create a new MageNinjaProduct entity, if one does not exist with
    * the provided reference_id.
    *
