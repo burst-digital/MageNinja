@@ -5,7 +5,7 @@ namespace Drupal\mage_ninja\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\mage_ninja\Controller\ProductController;
-use Drupal\mage_ninja\Import\Batch;
+use Drupal\mage_ninja\Batch\Import;
 
 class ConfigForm extends ConfigFormBase {
   /**
