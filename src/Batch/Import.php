@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\mage_ninja\Import;
+namespace Drupal\mage_ninja\Batch;
 
 use Drupal\mage_ninja\Entity\MageNinjaProduct;
 use Drupal\mage_ninja\Controller\ProductController;
 
-class Batch {
+class Import {
   /**
    * Processes a page of items.
    *

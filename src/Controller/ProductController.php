@@ -7,7 +7,7 @@ use Drupal\mage_ninja\Api\Api;
 use Drupal\mage_ninja\Api\JsonExceptionResponse;
 use Drupal\mage_ninja\Api\SearchCriteriaBuilder;
 use Drupal\mage_ninja\Entity\MageNinjaProduct;
-use Drupal\mage_ninja\Import\Batch;
+use Drupal\mage_ninja\Batch\Import;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
