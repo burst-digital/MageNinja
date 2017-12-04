@@ -1,0 +1,4 @@
+mage_ninja magento:
+  title: 'API endpoints designed for the Magento plugin MageNinjaApi'
+mage_ninja frontend:
+  title: 'API endpoints for use in frontend applications'
