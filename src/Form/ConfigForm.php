@@ -5,7 +5,6 @@ namespace Drupal\mage_ninja\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\mage_ninja\Controller\ProductController;
-use Drupal\mage_ninja\Batch\Import;
 
 class ConfigForm extends ConfigFormBase {
   /**
@@ -116,7 +115,7 @@ class ConfigForm extends ConfigFormBase {
     $totalPages = ceil($productCount / self::PAGE_SIZE);
 
     do {
-      $operations[] = ['\Drupal\mage_ninja\Import\Batch::process', [$currentPage, self::PAGE_SIZE]];
+      $operations[] = ['\Drupal\mage_ninja\Batch\Import::process', [$currentPage, self::PAGE_SIZE]];
       $currentPage++;
     } while($totalPages >= $currentPage);
 
