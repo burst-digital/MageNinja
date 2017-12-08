@@ -43,10 +43,10 @@ class Api {
       $client = self::getClient();
 
       /** @var string $username */
-      $username = $config->get('admin_username'); // TODO: Local test value 'burst';
+      $username = $config->get('admin_username');
 
       /** @var string $password */
-      $password = $config->get('admin_password'); // TODO: Local test value '73xnY83383G6aC68';
+      $password = $config->get('admin_password');
 
       $endpoint = 'V1/integration/admin/token';
       $options = [
@@ -60,6 +60,7 @@ class Api {
       $response = $client->post($endpoint, $options);
 
       // Trim, because token is returned with surrounding double quotes (i.e.: "thisisatoken").
+      // TODO: use decoder service instead of trim()
       /** @var string $token */
       $token = trim($response->getBody(), '"');
 
@@ -97,6 +98,7 @@ class Api {
     $response = $client->post($endpoint, $options);
 
     // Trim, because token is returned with surrounding double quotes (i.e.: "thisisatoken").
+    // TODO: Use decoder instead of trim()
     /** @var string $token */
     $token = trim($response->getBody(), '"');
 
