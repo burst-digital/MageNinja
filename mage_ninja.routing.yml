@@ -44,7 +44,8 @@ mage_ninja.config:
 mage_ninja.oauth:
   path: 'mage_ninja/oauth'
   defaults:
-    _controller: '\Drupal\mage_ninja\Controller\OAuthController::identity'
+    _form: '\Drupal\mage_ninja\Form\OAuthForm'
+    _title: 'MageNinja - Magento integration'
   requirements:
     _permission: 'access content'
 
