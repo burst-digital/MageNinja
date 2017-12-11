@@ -2,6 +2,7 @@
 
 namespace Drupal\mage_ninja\Batch;
 
+use Drupal\mage_ninja\DataModel\Product;
 use Drupal\mage_ninja\Entity\MageNinjaProduct;
 use Drupal\mage_ninja\Controller\ProductController;
 
@@ -19,7 +20,7 @@ class Import {
     $controller = new ProductController();
 
     /** @var \Symfony\Component\HttpFoundation\JsonResponse $response */
-    $response =  $controller->getByPage($currentPage, $pageSize);
+    $response = $controller->getByPage($currentPage, $pageSize);
 
     /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
     $decoder = \Drupal::service('serializer');
@@ -34,30 +35,9 @@ class Import {
         ->execute();
 
       if (empty($productEntity)) {
-        $product = [
-          'reference_id' => $item['id'],
-          'sku' => $item['sku'],
-          'name' => $item['name'],
-          'price' => $item['price'],
-        ];
-        
-        if(isset($item['custom_attributes'])) {
-          foreach($item['custom_attributes'] as $attribute) {
-            if($attribute['attribute_code'] === 'special_price') {
-              $product['special_price'] = $attribute['value'];
-            }
+        $product = new Product($item);
 
-            if($attribute['attribute_code'] === 'special_from_date') {
-              $product['special_price_from'] = $attribute['value'];
-            }
-
-            if($attribute['attribute_code'] === 'special_to_date') {
-              $product['special_price_to'] = $attribute['value'];
-            }
-          }
-        }
-
-        MageNinjaProduct::create($product)->save();
+        MageNinjaProduct::create($product->toArray())->save();
       }
     }
   }
