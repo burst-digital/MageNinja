@@ -47,7 +47,7 @@ class ProductController extends ControllerBase {
       /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $serializer */
       $serializer = \Drupal::service('serializer');
 
-      /** @var MageNinjaProduct $product */
+      /** @var array $product */
       $product = $serializer->decode($response->getBody(), 'json');
 
       return new JsonResponse($product);
