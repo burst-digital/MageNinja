@@ -2,6 +2,7 @@
 
 namespace Drupal\mage_ninja\Form;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\mage_ninja\Controller\ProductController;
@@ -45,35 +46,35 @@ class ConfigForm extends ConfigFormBase {
       '#submit' => ['::importAll'],
     ];
 
-    $form['connection'] = [
+    $form['integration'] = [
       '#type' => 'details',
-      '#title' => t('Connection'),
-      '#open' => TRUE,
+      '#title' => t('Magento API integration'),
+      '#open' => TRUE
     ];
 
-    $form['connection']['base_uri'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Magento base URI'),
-      '#default_value' => $config->get('base_uri'),
-      '#required' => TRUE
+    $form['integration']['integration_key'] = [
+      '#type' => 'item',
+      '#title' => t('Integration key'),
+      '#markup' => $config->get('integration_key'),
+      '#description' => 'Use this integration key when activating the integration in Magento.'
     ];
 
-    $form['connection']['admin_username'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Magento admin username'),
-      '#default_value' => $config->get('admin_username'),
-      '#required' => TRUE
+    $form['integration']['integration_secret'] = [
+      '#type' => 'item',
+      '#title' => t('Integration secret'),
+      '#markup' => $config->get('integration_secret'),
+      '#description' => 'Use this integration secret when activating the integration in Magento.'
     ];
 
-    $form['connection']['admin_password'] = [
-      '#type' => 'password',
-      '#title' => $this->t('Magento admin password'),
-      '#default_value' => $config->get('admin_password'),
-      '#required' => TRUE
+    $form['regenerate_integration'] = [
+      '#type' => 'submit',
+      '#value' => t('Regenerate integration key'),
+      '#submit' => ['::regenerateIntegration']
     ];
 
-    return parent::buildForm($form, $form_state);
+    return $form;
   }
+
 
   /**
    * {@inheritdoc}
@@ -129,5 +130,18 @@ class ConfigForm extends ConfigFormBase {
     ];
 
     batch_set($batch);
+  }
+
+  public static function regenerateIntegration() {
+    $integration_key = Crypt::hashBase64(uniqid(rand(), true));
+    $integration_secret = Crypt::hmacBase64(uniqid(rand(), true), $integration_key);
+
+    /** @var \Drupal\Core\Config\Config $config */
+    $config = \Drupal::service('config.factory')->getEditable('mage_ninja.settings');
+
+    $config->set('integration_key', $integration_key);
+    $config->set('integration_secret', $integration_secret);
+
+    $config->save();
   }
 }
