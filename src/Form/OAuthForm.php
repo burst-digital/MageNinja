@@ -61,8 +61,9 @@ class OAuthForm extends FormBase {
     /** @var string $integrationSecret */
     $integrationSecret = $form_state->getValue('integration_secret');
 
+    // Make sure the consumerKey sent in the request is the same as the one received from Magento
     if($config->get('oauth_consumer_key') === $consumerKey) {
-      // Check if the login credentials match those in the config
+      // Check if the login credentials match the generated integration key and secret in the config
       if ($integrationKey === $config->get('integration_key') && Crypt::hashEquals($config->get('integration_secret'), $integrationSecret)) {
         $form_state->setResponse(new TrustedRedirectResponse($consumerCallback));
       }
@@ -70,7 +71,7 @@ class OAuthForm extends FormBase {
         throw new \Exception('Incorrect login credentials.');
       }
     } else {
-      throw new \Exception('Consumer keys received on different requests do not match.');
+      throw new \Exception('Consumer key is invalid.');
     }
   }
 }
