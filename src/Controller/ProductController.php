@@ -30,16 +30,10 @@ class ProductController extends ControllerBase {
       /** @var \GuzzleHttp\Client $client */
       $client = Api::getClient();
 
-      /** @var array $authHeader */
-      $authHeader = Api::getAuthHeader($token);
-
       $endpoint = 'V1/mage_ninja/product/' . $id;
-      $options = [
-        'headers' => $authHeader
-      ];
 
       /** @var \GuzzleHttp\Psr7\Response $response */
-      $response = $client->get($endpoint, $options);
+      $response = $client->get($endpoint);
 
       /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $serializer */
       $serializer = \Drupal::service('serializer');
