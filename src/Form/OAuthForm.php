@@ -84,16 +84,8 @@ class OAuthForm extends FormBase {
     /** @var string $consumerCallback */
     $consumerCallback = $_GET['success_call_back'];
 
-    /** @var string $integrationKey */
-    $integrationKey = $form_state->getValue('integration_key');
-
-    /** @var string $integrationSecret */
-    $integrationSecret = $form_state->getValue('integration_secret');
-
     // Make sure the consumerKey sent in the request is the same as the one received from Magento
     if($config->get('oauth_consumer_key') === $consumerKey) {
-      // TODO: finalize by requesting RequestToken & AccessToken
-
       $handlerStack = HandlerStack::create();
 
       $middleware = new Oauth1([
@@ -111,20 +103,36 @@ class OAuthForm extends FormBase {
         'auth' => 'oauth'
       ]);
 
+      /*
+       * REQUEST TOKEN
+       */
       $response = $client->post('/oauth/token/request');
       $body = (string)$response->getBody();
 
       // Format $body into usable variables.
       // $body = 'oauth_token=hp0blt5hlel4qfq02utc03a98xkgnv7b&oauth_token_secret=0e14acixb3l5nl6io0mj4x8ek0147c83'
       $bodyArray = explode('&', $body);
-      $oauthToken = explode('=', $bodyArray[0]);
-      $oauthTokenSecret = explode('=', $bodyArray[1]);
+      $oauthRequestToken = explode('=', $bodyArray[0])[1];
+      $oauthRequestTokenSecret = explode('=', $bodyArray[1])[1];
+
+
+      /*
+       * ACCESS TOKEN
+       */
+      $response = $client->post('/oauth/token/access');
+      $body = (string)$response->getBody();
+
+      // Format $body into usable variables.
+      // $body = 'oauth_token=hp0blt5hlel4qfq02utc03a98xkgnv7b&oauth_token_secret=0e14acixb3l5nl6io0mj4x8ek0147c83'
+      $bodyArray = explode('&', $body);
+      $oauthAccessToken = explode('=', $bodyArray[0])[1];
+      $oauthAccessTokenSecret = explode('=', $bodyArray[1])[1];
 
       /** @var \Drupal\Core\Config\Config $config */
       $config = \Drupal::service('config.factory')->getEditable('mage_ninja.settings');
 
-      $config->set('oauth_token', $oauthToken)->save();
-      $config->set('oauth_token_secret', $oauthTokenSecret)->save();
+      $config->set('oauth_token', $oauthAccessToken)->save();
+      $config->set('oauth_token_secret', $oauthAccessTokenSecret)->save();
 
       $form_state->setResponse(new TrustedRedirectResponse($consumerCallback));
     } else {
