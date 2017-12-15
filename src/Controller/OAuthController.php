@@ -22,6 +22,9 @@ class OAuthController extends ControllerBase {
     $config->set('oauth_verifier', $oauthVerifier)->save();
     $config->set('store_base_url', $storeBaseUrl)->save();
 
+    // TODO: Remove. Only neccessary for testing in current docker setup.
+    $config->set('store_base_url', str_replace('dmr.', 'webserver.', $storeBaseUrl));
+
     return new Response();
   }
 }

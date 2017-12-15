@@ -86,26 +86,25 @@ class OAuthForm extends FormBase {
 
     // Make sure the consumerKey sent in the request is the same as the one received from Magento
     if($config->get('oauth_consumer_key') === $consumerKey) {
+      /*
+       * REQUEST TOKEN
+       */
       $handlerStack = HandlerStack::create();
 
       $middleware = new Oauth1([
         'consumer_key' => $config->get('oauth_consumer_key'),
         'consumer_secret' => $config->get('oauth_consumer_secret'),
         'verifier' => $config->get('oauth_verifier'),
-        'token_secret' => ''
+        'token_secret' => '' // Needs to be empty string to avoid getting exception.
       ]);
       $handlerStack->push($middleware);
 
       $client = new Client([
-//        'base_uri' => $config->get('store_base_url'),
-        'base_uri' => 'http://webserver.magento',
+        'base_uri' => $config->get('store_base_url'),
         'handler' => $handlerStack,
         'auth' => 'oauth'
       ]);
 
-      /*
-       * REQUEST TOKEN
-       */
       $response = $client->post('/oauth/token/request');
       $body = (string)$response->getBody();
 
@@ -119,6 +118,22 @@ class OAuthForm extends FormBase {
       /*
        * ACCESS TOKEN
        */
+      $handlerStack = HandlerStack::create();
+
+      $middleware = new Oauth1([
+        'consumer_key' => $config->get('oauth_consumer_key'),
+        'consumer_secret' => $config->get('oauth_consumer_secret'),
+        'verifier' => $config->get('oauth_verifier'),
+        'token' => $oauthRequestToken,
+        'token_secret' => $oauthRequestTokenSecret
+      ]);
+      $handlerStack->push($middleware);
+
+      $client = new Client([
+                'base_uri' => $config->get('store_base_url'),
+        'handler' => $handlerStack,
+        'auth' => 'oauth'
+      ]);
       $response = $client->post('/oauth/token/access');
       $body = (string)$response->getBody();
 
