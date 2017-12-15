@@ -30,20 +30,4 @@ class ApiController extends ControllerBase {
       return new JsonExceptionResponse($e);
     }
   }
-
-  /**
-   * Requests an admin token from the Magento API.
-   *
-   * @return JsonExceptionResponse|JsonResponse
-   */
-  public function getAdminToken() {
-    try {
-      /** @var string $token */
-      $token = Api::getAdminToken();
-
-      return new JsonResponse(['token' => $token]);
-    } catch (RequestException $e) {
-      return new JsonExceptionResponse($e);
-    }
-  }
 }

@@ -30,9 +30,6 @@ class ProductController extends ControllerBase {
       /** @var \GuzzleHttp\Client $client */
       $client = Api::getClient();
 
-      /** @var string $token */
-      $token = Api::getAdminToken();
-
       /** @var array $authHeader */
       $authHeader = Api::getAuthHeader($token);
 
@@ -69,25 +66,17 @@ class ProductController extends ControllerBase {
       /** @var \GuzzleHttp\Client $client */
       $client = Api::getClient();
 
-      /** @var string $token */
-      $token = Api::getAdminToken();
-
-      /** @var array $authHeader */
-      $authHeader = Api::getAuthHeader($token);
-
       /** @var SearchCriteriaBuilder $searchCriteria */
       $searchCriteria = new SearchCriteriaBuilder();
       $searchCriteria
         ->add(['[pageSize]' => $pageSize])
         ->add(['[currentPage]' => $currentPage]);
 
+      /** @var string $endpoint */
       $endpoint = 'V1/products' . $searchCriteria;
-      $options = [
-        'headers' => $authHeader
-      ];
 
       /** @var \GuzzleHttp\Psr7\Response $response */
-      $response = $client->get($endpoint, $options);
+      $response = $client->get($endpoint);
 
       /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
       $decoder = \Drupal::service('serializer');
@@ -114,25 +103,17 @@ class ProductController extends ControllerBase {
       /** @var \GuzzleHttp\Client $client */
       $client = Api::getClient();
 
-      /** @var string $token */
-      $token = Api::getAdminToken();
-
-      /** @var array $authHeader */
-      $authHeader = Api::getAuthHeader($token);
-
       /** @var SearchCriteriaBuilder $searchCriteria */
       $searchCriteria = new SearchCriteriaBuilder();
       $searchCriteria
         ->add(['[pageSize]' => 1])
         ->add(['[currentPage]' => 1]);
 
+      /** @var string $endpoint */
       $endpoint = 'V1/products' . $searchCriteria;
-      $options = [
-        'headers' => $authHeader
-      ];
 
       /** @var \GuzzleHttp\Psr7\Response $response */
-      $response = $client->get($endpoint, $options);
+      $response = $client->get($endpoint);
 
       /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
       $decoder = \Drupal::service('serializer');
@@ -249,19 +230,10 @@ class ProductController extends ControllerBase {
       /** @var \GuzzleHttp\Client $client */
       $client = Api::getClient();
 
-      /** @var string $token */
-      $token = Api::getAdminToken();
-
-      /** @var array $authHeader */
-      $authHeader = Api::getAuthHeader($token);
-
       $endpoint = 'V1/catalog/products';
-      $options = [
-        'headers' => $authHeader
-      ];
 
       /** @var \GuzzleHttp\Psr7\Response $response */
-      $response = $client->get($endpoint, $options);
+      $response = $client->get($endpoint);
 
       /** @var \Symfony\Component\Serializer\Encoder\DecoderInterface $decoder */
       $decoder = \Drupal::service('serializer');
