@@ -5,13 +5,6 @@ mage_ninja.token:
   requirements:
     _permission: 'mage_ninja frontend'
 
-mage_ninja.admintoken:
-  path: 'mage_ninja/token/admin'
-  defaults:
-    _controller: '\Drupal\mage_ninja\Controller\ApiController::getAdminToken'
-  requirements:
-    _permission: 'mage_ninja frontend'
-
 mage_ninja.product:
   path: 'mage_ninja/product/{id}'
   defaults:
