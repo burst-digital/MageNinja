@@ -75,22 +75,6 @@ class ConfigForm extends ConfigFormBase {
     return $form;
   }
 
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->config('mage_ninja.settings');
-
-    $config->set('base_uri', $form_state->getValue('base_uri'));
-    $config->set('admin_username', $form_state->getValue('admin_username'));
-    $config->set('admin_password', $form_state->getValue('admin_password'));
-
-    $config->save();
-
-    parent::submitForm($form, $form_state);
-  }
-
   /**
    * Import all Magento products into Drupal.
    *
