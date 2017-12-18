@@ -41,7 +41,7 @@ class Api {
 
         /** @var Client client */
         self::$client = new Client([
-          'base_uri' => $config->get('store_base_url'),
+          'base_uri' => $config->get('store_base_url') . 'rest/',
           'handler' => $handlerStack,
           'auth' => 'oauth'
         ]);
