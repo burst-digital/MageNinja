@@ -5,13 +5,6 @@ mage_ninja.token:
   requirements:
     _permission: 'mage_ninja frontend'
 
-mage_ninja.admintoken:
-  path: 'mage_ninja/token/admin'
-  defaults:
-    _controller: '\Drupal\mage_ninja\Controller\ApiController::getAdminToken'
-  requirements:
-    _permission: 'mage_ninja frontend'
-
 mage_ninja.product:
   path: 'mage_ninja/product/{id}'
   defaults:
@@ -40,3 +33,18 @@ mage_ninja.config:
     _title: 'Mage Ninja'
   requirements:
     _permission: 'administer site configuration'
+
+mage_ninja.oauth:
+  path: 'mage_ninja/oauth'
+  defaults:
+    _form: '\Drupal\mage_ninja\Form\OAuthForm'
+    _title: 'MageNinja - Magento integration'
+  requirements:
+    _permission: 'access content'
+
+mage_ninja.oauth_callback:
+  path: 'mage_ninja/oauth/callback'
+  defaults:
+    _controller: 'Drupal\mage_ninja\Controller\OAuthController::callback'
+  requirements:
+    _permission: 'access content'

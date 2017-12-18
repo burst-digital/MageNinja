@@ -1,0 +1,14 @@
+{
+  "name": "burst/mage_ninja",
+  "description": "Mage Ninja connects Magento 2 to Drupal 8, adding a mage_ninja_product custom content entity that can be referenced in content types.",
+  "type": "drupal-module",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Daniël Brekelmans"
+    }
+  ],
+  "require": {
+    "guzzlehttp/oauth-subscriber": "^0.3.0"
+  }
+}

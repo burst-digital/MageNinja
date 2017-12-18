@@ -2,7 +2,10 @@
 
 namespace Drupal\mage_ninja\Api;
 
+use Drupal\Core\Config\ConfigException;
 use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 class Api {
   /**
@@ -19,55 +22,35 @@ class Api {
    */
   public static function getClient() {
     if (self::$client === null) {
-      /** @var \GuzzleHttp\Client client */
-      self::$client = new Client([
-        'base_uri' => \Drupal::config('mage_ninja.settings')->get('base_uri'),
-      ]);
+      /** @var \Drupal\Core\Config\ImmutableConfig $config */
+      $config = \Drupal::config('mage_ninja.settings');
+
+      /** @var HandlerStack $handlerStack */
+      $handlerStack = HandlerStack::create();
+
+      try {
+        /** @var Oauth1 $middleware */
+        $middleware = new Oauth1([
+          'consumer_key' => $config->get('oauth_consumer_key'),
+          'consumer_secret' => $config->get('oauth_consumer_secret'),
+          'verifier' => $config->get('oauth_verifier'),
+          'token' => $config->get('oauth_token'),
+          'token_secret' => $config->get('oauth_token_secret')
+        ]);
+        $handlerStack->push($middleware);
+
+        /** @var Client client */
+        self::$client = new Client([
+          'base_uri' => $config->get('store_base_url') . 'rest/',
+          'handler' => $handlerStack,
+          'auth' => 'oauth'
+        ]);
+      } catch(ConfigException $e) {
+        \Drupal::logger('mage_ninja')->error('OAuth configuration is not set. Make sure you set up the integration in magento: System > Extensions > Integrations.');
+      }
     }
 
     return self::$client;
-  }
-
-  /**
-   * Requests an admin token from the Magento API.
-   *
-   * @return string
-   *  The admin token.
-   */
-  public static function getAdminToken() {
-    /** @var \Drupal\Core\Config\ImmutableConfig $config */
-    $config = \Drupal::config('mage_ninja.settings');
-
-    if ($config->get('admin_token') === null) {
-      /** @var \GuzzleHttp\Client $client */
-      $client = self::getClient();
-
-      /** @var string $username */
-      $username = $config->get('admin_username');
-
-      /** @var string $password */
-      $password = $config->get('admin_password');
-
-      $endpoint = 'V1/integration/admin/token';
-      $options = [
-        'json' => [
-          'username' => $username,
-          'password' => $password,
-        ],
-      ];
-
-      /** @var \GuzzleHttp\Psr7\Response $response */
-      $response = $client->post($endpoint, $options);
-
-      // Trim, because token is returned with surrounding double quotes (i.e.: "thisisatoken").
-      // TODO: use decoder service instead of trim()
-      /** @var string $token */
-      $token = trim($response->getBody(), '"');
-
-      \Drupal::service('config.factory')->getEditable('mage_ninja.settings')->set('admin_token', $token)->save();
-    }
-
-    return $config->get('admin_token');
   }
 
   /**

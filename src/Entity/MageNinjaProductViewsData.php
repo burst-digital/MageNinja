@@ -16,9 +16,6 @@ class MageNinjaProductViewsData extends EntityViewsData {
     /** @var array $data */
     $data = parent::getViewsData();
 
-    // Additional information for Views integration, such as table joins, can be
-    // put here.
-
     return $data;
   }
 
