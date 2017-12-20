@@ -24,7 +24,7 @@ mage_ninja.import_product:
   defaults:
     _controller: '\Drupal\mage_ninja\Controller\ProductController::importById'
   requirements:
-    _permission: 'mage_ninja magento'
+    _permission: 'access content'
 
 mage_ninja.config:
   path: 'admin/config/services/mage_ninja'
