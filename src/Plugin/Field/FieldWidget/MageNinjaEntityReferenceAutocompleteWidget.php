@@ -12,7 +12,7 @@ use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget
  *   label = @Translation("Autocomplete"),
  *   description = @Translation("An autocomplete text field."),
  *   field_types = {
- *     "mage_ninja"
+ *     "mage_ninja_product"
  *   }
  * )
  */
