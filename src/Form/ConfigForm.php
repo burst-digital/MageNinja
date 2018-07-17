@@ -34,9 +34,28 @@ class ConfigForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('mage_ninja.settings');
 
+    $importDisabled = TRUE;
+
+    if ($config->get('website_id')) {
+      $importDisabled = FALSE;
+    }
+
+    $form['settings'] = [
+      '#type' => 'details',
+      '#title' => t('Settings'),
+      '#open' => TRUE,
+    ];
+
+    $form['settings']['website_id'] = [
+      '#type' => 'textfield',
+      '#title' => t('Magento website ID'),
+      '#required' => TRUE,
+      '#default_value' => $config->get('website_id'),
+    ];
+
     $form['import'] = [
       '#type' => 'details',
-      '#title' => t('Import'),
+      '#title' => t('Product synchronisation'),
       '#open' => TRUE,
     ];
 
@@ -44,6 +63,7 @@ class ConfigForm extends ConfigFormBase {
       '#type' => 'submit',
       '#value' => t('Import all products'),
       '#submit' => ['::importAll'],
+      '#disabled' => $importDisabled,
     ];
 
     $form['integration'] = [
@@ -66,13 +86,25 @@ class ConfigForm extends ConfigFormBase {
       '#description' => 'Use this integration secret when activating the integration in Magento.'
     ];
 
-    $form['regenerate_integration'] = [
+    $form['integration']['regenerate_integration'] = [
       '#type' => 'submit',
-      '#value' => t('Regenerate integration key'),
+      '#value' => t('Regenerate integration keys'),
       '#submit' => ['::regenerateIntegration']
     ];
 
-    return $form;
+    return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $config = $this->configFactory->getEditable('mage_ninja.settings');
+
+    $config->set('website_id', $form_state->getValue('website_id'));
+    $config->save();
+
+    parent::submitForm($form, $form_state);
   }
 
   /**
