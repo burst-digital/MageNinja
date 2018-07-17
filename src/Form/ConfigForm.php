@@ -36,7 +36,7 @@ class ConfigForm extends ConfigFormBase {
 
     $importDisabled = TRUE;
 
-    if ($config->get('website_id')) {
+    if ($config->get('storeview_id')) {
       $importDisabled = FALSE;
     }
 
