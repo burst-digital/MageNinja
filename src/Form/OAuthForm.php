@@ -130,7 +130,7 @@ class OAuthForm extends FormBase {
       $handlerStack->push($middleware);
 
       $client = new Client([
-                'base_uri' => $config->get('store_base_url'),
+        'base_uri' => $config->get('store_base_url'),
         'handler' => $handlerStack,
         'auth' => 'oauth'
       ]);
