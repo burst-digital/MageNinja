@@ -46,11 +46,11 @@ class ConfigForm extends ConfigFormBase {
       '#open' => TRUE,
     ];
 
-    $form['settings']['website_id'] = [
+    $form['settings']['storeview_id'] = [
       '#type' => 'textfield',
-      '#title' => t('Magento website ID'),
+      '#title' => t('Magento storeview ID'),
       '#required' => TRUE,
-      '#default_value' => $config->get('website_id'),
+      '#default_value' => $config->get('storeview_id'),
     ];
 
     $form['import'] = [
@@ -101,7 +101,7 @@ class ConfigForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->getEditable('mage_ninja.settings');
 
-    $config->set('website_id', $form_state->getValue('website_id'));
+    $config->set('storeview_id', $form_state->getValue('storeview_id'));
     $config->save();
 
     parent::submitForm($form, $form_state);
