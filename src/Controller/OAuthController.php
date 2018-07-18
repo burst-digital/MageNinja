@@ -10,7 +10,6 @@ class OAuthController extends ControllerBase {
     // This function is called by Magento before the user is sent to the OAuthForm.
 
     $oauthConsumerKey = $_POST['oauth_consumer_key'];
-    \Drupal::logger('mage_ninja')->debug('oauthConsumerKey: ' . $oauthConsumerKey);
 
     $oauthConsumerSecret = $_POST['oauth_consumer_secret'];
     $storeBaseUrl = $_POST['store_base_url'];

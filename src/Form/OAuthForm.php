@@ -84,8 +84,6 @@ class OAuthForm extends FormBase {
     /** @var string $consumerCallback */
     $consumerCallback = $_GET['success_call_back'];
 
-    \Drupal::logger('mage_ninja')->debug('consumerKey: ' . $consumerKey); // 272ag5xkgnie1mcgag1fxn1b9xwso0xs
-
     // Make sure the consumerKey sent in the request is the same as the one received from Magento
     if($config->get('oauth_consumer_key') === $consumerKey) {
       /*
